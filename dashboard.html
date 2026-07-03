@@ -1,0 +1,1044 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ZuriAgency.co.ke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#0F2B5B' },
+            gold: { 50:'#FFFBEB',100:'#FEF3C7',200:'#FDE68A',300:'#FCD34D',400:'#FBBF24',500:'#D4A843',600:'#C9952B',700:'#B45309' },
+            surface: { 0:'#FFFFFF',50:'#F8FAFC',100:'#F1F5F9',200:'#E2E8F0',300:'#CBD5E1' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#F1F5F9;color:#0F172A;overflow-x:hidden}
+    @keyframes globalFadeIn{0%{opacity:0}100%{opacity:1}}body{animation:globalFadeIn .5s ease-out forwards}
+    .gradient-text-blue{background:linear-gradient(135deg,#1E40AF,#2563EB,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .gradient-text-gold{background:linear-gradient(135deg,#C9952B,#D4A843,#FBBF24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .sidebar{width:260px;min-height:100vh;background:#fff;border-right:1px solid #E2E8F0;transition:transform .3s cubic-bezier(.25,.46,.45,.94);z-index:40}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:35}
+    .sidebar-overlay.active{display:block}
+
+    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;color:#64748B;transition:all .15s ease;cursor:pointer;margin:2px 12px}
+    .nav-item:hover{background:#F8FAFC;color:#334155}
+    .nav-item.active{background:#EFF6FF;color:#2563EB;font-weight:600}
+    .nav-item.active .nav-icon{color:#2563EB}
+
+    .stat-card{position:relative;overflow:hidden}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.blue::before{background:linear-gradient(90deg,#2563EB,#60A5FA)}
+    .stat-card.gold::before{background:linear-gradient(90deg,#C9952B,#FBBF24)}
+    .stat-card.green::before{background:linear-gradient(90deg,#10B981,#34D399)}
+    .stat-card.purple::before{background:linear-gradient(90deg,#7C3AED,#A78BFA)}
+
+    .dash-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .dash-card:hover{border-color:#BFDBFE;box-shadow:0 4px 16px rgba(37,99,235,.06)}
+
+    .cta-primary{background:linear-gradient(135deg,#1E40AF,#2563EB);box-shadow:0 4px 16px rgba(37,99,235,.25);transition:all .3s ease}
+    .cta-primary:hover{box-shadow:0 6px 24px rgba(37,99,235,.35);transform:translateY(-1px)}
+    .cta-primary:active{transform:translateY(0)}
+    .cta-gold{background:linear-gradient(135deg,#C9952B,#D4A843);box-shadow:0 4px 16px rgba(212,168,67,.25);transition:all .3s ease}
+    .cta-gold:hover{box-shadow:0 6px 24px rgba(212,168,67,.35);transform:translateY(-1px)}
+    .cta-green{background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 16px rgba(16,185,129,.25);transition:all .3s ease}
+    .cta-green:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+
+    .form-input{width:100%;padding:10px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;color:#0F172A;background:#fff;transition:all .2s ease;outline:none}
+    .form-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+    .form-input::placeholder{color:#94A3B8;font-weight:300}
+    .form-input.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+    .form-select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+
+    .page-panel{display:none}
+    .page-panel.active{display:block;animation:pageFadeIn .35s ease-out}
+    @keyframes pageFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    .tx-row{transition:background .15s ease}
+    .tx-row:hover{background:#F8FAFC}
+
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+
+    .copy-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0F172A;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:500;opacity:0;transition:all .3s ease;z-index:100;pointer-events:none;display:flex;align-items:center;gap:8px}
+    .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .mpesa-badge{background:linear-gradient(135deg,#4CAF50,#2E7D32)}
+
+    @keyframes barGrow{from{width:0}to{width:var(--w)}}
+    .bar-animate{animation:barGrow .8s ease-out forwards}
+
+    .error-msg{font-size:12px;color:#EF4444;margin-top:4px;display:none;align-items:center;gap:4px}
+    .error-msg.visible{display:flex}
+
+    @media(max-width:1023px){
+      .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+    }
+  </style>
+</head>
+<body class="font-inter antialiased">
+
+<!-- Copy Toast -->
+<div id="copyToast" class="copy-toast"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i><span id="copyToastText">Copied!</span></div>
+
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- ==================== SIDEBAR ==================== -->
+<aside id="sidebar" class="sidebar fixed top-0 left-0 flex flex-col">
+  <div class="p-5 border-b border-surface-200">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-800 to-brand-600 flex items-center justify-center shadow-md">
+        <span class="text-white font-bold text-[10px]">Z</span>
+      </div>
+      <span class="text-brand-900 font-semibold text-sm">ZuriAgency<span class="text-brand-600">.co.ke</span></span>
+    </a>
+  </div>
+
+  <nav class="flex-1 py-4 overflow-y-auto">
+    <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.15em] px-7 mb-2">Main</p>
+    <div class="nav-item active" data-page="overview" onclick="switchPage('overview')">
+      <i data-lucide="layout-dashboard" class="w-[18px] h-[18px] nav-icon"></i>Overview
+    </div>
+    <div class="nav-item" data-page="referrals" onclick="switchPage('referrals')">
+      <i data-lucide="users" class="w-[18px] h-[18px] nav-icon"></i>Referrals
+    </div>
+    <div class="nav-item" data-page="withdraw" onclick="switchPage('withdraw')">
+      <i data-lucide="wallet" class="w-[18px] h-[18px] nav-icon"></i>Withdraw
+    </div>
+    <div class="nav-item" data-page="transactions" onclick="switchPage('transactions')">
+      <i data-lucide="receipt" class="w-[18px] h-[18px] nav-icon"></i>Transactions
+    </div>
+
+    <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.15em] px-7 mb-2 mt-6">Account</p>
+    <div class="nav-item" data-page="profile" onclick="switchPage('profile')">
+      <i data-lucide="user-circle" class="w-[18px] h-[18px] nav-icon"></i>Profile & Settings
+    </div>
+    <div class="nav-item" onclick="window.location.href='index.html#faq'">
+      <i data-lucide="help-circle" class="w-[18px] h-[18px] nav-icon"></i>Help & FAQ
+    </div>
+  </nav>
+
+  <div class="p-4 border-t border-surface-200">
+    <div class="bg-gradient-to-br from-brand-50 to-gold-50/30 border border-brand-100 rounded-xl p-3.5">
+      <p class="text-[11px] font-semibold text-brand-800 mb-0.5">Upgrade Your Earnings</p>
+      <p class="text-[10px] text-slate-500 font-light leading-relaxed mb-2.5">Share your link with 5 more people this week to hit your target.</p>
+      <div class="h-1.5 bg-white rounded-full overflow-hidden">
+        <div class="h-full w-[60%] bg-gradient-to-r from-brand-500 to-brand-400 rounded-full"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-1.5">3 of 5 referrals this week</p>
+    </div>
+  </div>
+</aside>
+
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="lg:ml-[260px] min-h-screen">
+
+  <!-- Top Bar -->
+  <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-surface-200">
+    <div class="flex items-center justify-between px-4 sm:px-6 h-16">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()" class="lg:hidden w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-surface-100 transition-colors">
+          <i data-lucide="menu" class="w-4 h-4 text-slate-600"></i>
+        </button>
+        <h1 id="pageTitle" class="text-base font-semibold text-brand-900">Overview</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="relative w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-surface-100 transition-colors">
+          <i data-lucide="bell" class="w-4 h-4 text-slate-500"></i>
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] text-white font-bold flex items-center justify-center">3</span>
+        </button>
+        <div class="hidden sm:flex items-center gap-2.5 pl-3 border-l border-surface-200">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white text-[11px] font-bold">JK</div>
+          <div>
+            <p class="text-[12px] font-semibold text-brand-900 leading-none">John Kamau</p>
+            <p class="text-[10px] text-slate-400">+254 712 345 678</p>
+          </div>
+          <button onclick="window.location.href='auth.html'" class="ml-2 w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
+            <i data-lucide="log-out" class="w-4 h-4 text-slate-400"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Content -->
+  <main class="p-4 sm:p-6">
+
+    <!-- ==================== OVERVIEW ==================== -->
+    <div id="page-overview" class="page-panel active">
+      <!-- Stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="stat-card blue bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Total Balance</p>
+            <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center"><i data-lucide="wallet" class="w-4 h-4 text-brand-500"></i></div>
+          </div>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 24,850</p>
+          <div class="flex items-center gap-1 mt-2"><i data-lucide="trending-up" class="w-3 h-3 text-emerald-500"></i><span class="text-[11px] text-emerald-600 font-medium">+KES 3,500 this week</span></div>
+        </div>
+        <div class="stat-card gold bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Direct Earned</p>
+            <div class="w-8 h-8 rounded-lg bg-gold-50 flex items-center justify-center"><i data-lucide="user-check" class="w-4 h-4 text-gold-500"></i></div>
+          </div>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 17,500</p>
+          <p class="text-[11px] text-slate-400 mt-2">50 direct referrals</p>
+        </div>
+        <div class="stat-card green bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Upline Earned</p>
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><i data-lucide="git-branch" class="w-4 h-4 text-emerald-500"></i></div>
+          </div>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 7,350</p>
+          <p class="text-[11px] text-slate-400 mt-2">49 override commissions</p>
+        </div>
+        <div class="stat-card purple bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Total Team</p>
+            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center"><i data-lucide="users" class="w-4 h-4 text-purple-500"></i></div>
+          </div>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">99</p>
+          <p class="text-[11px] text-slate-400 mt-2">50 direct + 49 indirect</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Earnings Chart (Simulated Bar Chart) -->
+        <div class="lg:col-span-2 dash-card p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="text-sm font-semibold text-brand-900">Earnings Over Time</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">Your monthly earnings breakdown</p>
+            </div>
+            <select class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto">
+              <option>Last 6 Months</option>
+              <option>Last 12 Months</option>
+            </select>
+          </div>
+          <div class="flex items-end gap-2 sm:gap-3 h-48">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-100 rounded-t-lg bar-animate" style="--w:100%;height:15%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-500 rounded-t-lg bar-animate" style="--w:100%;height:12%;animation-delay:.1s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Oct</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-100 rounded-t-lg bar-animate" style="--w:100%;height:28%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-500 rounded-t-lg bar-animate" style="--w:100%;height:22%;animation-delay:.15s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Nov</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-100 rounded-t-lg bar-animate" style="--w:100%;height:45%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-500 rounded-t-lg bar-animate" style="--w:100%;height:35%;animation-delay:.2s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Dec</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-100 rounded-t-lg bar-animate" style="--w:100%;height:62%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-500 rounded-t-lg bar-animate" style="--w:100%;height:48%;animation-delay:.25s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Jan</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-100 rounded-t-lg bar-animate" style="--w:100%;height:78%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-brand-500 rounded-t-lg bar-animate" style="--w:100%;height:60%;animation-delay:.3s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Feb</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-surface-100 rounded-t-lg relative" style="height:100%">
+                <div class="absolute bottom-0 left-0 right-0 bg-gold-200 rounded-t-lg bar-animate" style="--w:100%;height:100%"></div>
+                <div class="absolute bottom-0 left-0 right-0 bg-gold-500 rounded-t-lg bar-animate" style="--w:100%;height:85%;animation-delay:.35s"></div>
+              </div>
+              <span class="text-[10px] text-brand-600 font-semibold">Mar</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-5 mt-4 pt-4 border-t border-surface-100">
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-brand-500"></div><span class="text-[11px] text-slate-500">Direct (KES 350/ref)</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-gold-500"></div><span class="text-[11px] text-slate-500">Upline (KES 150/ref)</span></div>
+          </div>
+        </div>
+
+        <!-- Quick Actions + Recent -->
+        <div class="space-y-6">
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Quick Actions</h3>
+            <div class="space-y-2.5">
+              <button onclick="switchPage('withdraw')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-brand-50 border border-brand-100 hover:bg-brand-100 transition-colors text-left">
+                <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center"><i data-lucide="download" class="w-4 h-4 text-white"></i></div>
+                <div><p class="text-[13px] font-semibold text-brand-900">Withdraw Funds</p><p class="text-[10px] text-slate-400">Send to M-Pesa</p></div>
+              </button>
+              <button onclick="switchPage('referrals')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-50 border border-surface-200 hover:bg-surface-100 transition-colors text-left">
+                <div class="w-9 h-9 rounded-lg bg-gold-500 flex items-center justify-center"><i data-lucide="share-2" class="w-4 h-4 text-white"></i></div>
+                <div><p class="text-[13px] font-semibold text-brand-900">Share Referral Link</p><p class="text-[10px] text-slate-400">WhatsApp, Facebook, etc.</p></div>
+              </button>
+              <button onclick="switchPage('transactions')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-50 border border-surface-200 hover:bg-surface-100 transition-colors text-left">
+                <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="receipt" class="w-4 h-4 text-white"></i></div>
+                <div><p class="text-[13px] font-semibold text-brand-900">View Transactions</p><p class="text-[10px] text-slate-400">Full payment history</p></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="dash-card p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-brand-900">Recent Activity</h3>
+              <button onclick="switchPage('transactions')" class="text-[11px] text-brand-600 font-medium hover:text-brand-700 transition-colors">View All</button>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0"><i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-600"></i></div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Direct - Mary O.</p><p class="text-[10px] text-slate-400">2 min ago</p></div>
+                <span class="text-[12px] font-semibold text-emerald-600">+KES 350</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gold-50 flex items-center justify-center flex-shrink-0"><i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-gold-600"></i></div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Upline - via Peter M.</p><p class="text-[10px] text-slate-400">18 min ago</p></div>
+                <span class="text-[12px] font-semibold text-gold-600">+KES 150</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0"><i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-red-500"></i></div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Withdrawal</p><p class="text-[10px] text-slate-400">1 hour ago</p></div>
+                <span class="text-[12px] font-semibold text-red-500">-KES 5,000</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0"><i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-600"></i></div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Direct - Grace W.</p><p class="text-[10px] text-slate-400">3 hours ago</p></div>
+                <span class="text-[12px] font-semibold text-emerald-600">+KES 350</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== REFERRALS ==================== -->
+    <div id="page-referrals" class="page-panel">
+      <!-- Referral Link Card -->
+      <div class="dash-card p-5 sm:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div class="flex-1">
+            <h3 class="text-sm font-semibold text-brand-900 mb-1">Your Referral Link</h3>
+            <p class="text-[12px] text-slate-400 font-light">Share this link with anyone. When they join, you earn KES 350 instantly.</p>
+          </div>
+          <div class="flex items-center gap-2 sm:w-auto">
+            <div class="flex-1 sm:w-80 bg-surface-50 border border-surface-200 rounded-lg px-3 py-2.5 flex items-center gap-2">
+              <i data-lucide="link" class="w-3.5 h-3.5 text-slate-400 flex-shrink-0"></i>
+              <p id="refLink" class="text-[12px] text-slate-600 font-mono truncate">zuriagency.co.ke/ref/john-k712345678</p>
+            </div>
+            <button onclick="copyRefLink()" class="cta-primary text-white text-[12px] font-semibold px-4 py-2.5 rounded-lg flex items-center gap-1.5 flex-shrink-0">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>Copy
+            </button>
+          </div>
+        </div>
+        <!-- Share Buttons -->
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-surface-100">
+          <span class="text-[11px] text-slate-400 font-medium self-center mr-1">Share via:</span>
+          <button onclick="shareRef('whatsapp')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-50 border border-green-100 text-[11px] font-semibold text-green-700 hover:bg-green-100 transition-colors">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>WhatsApp
+          </button>
+          <button onclick="shareRef('facebook')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-100 text-[11px] font-semibold text-blue-700 hover:bg-blue-100 transition-colors">
+            <i data-lucide="facebook" class="w-3.5 h-3.5"></i>Facebook
+          </button>
+          <button onclick="shareRef('twitter')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 border border-sky-100 text-[11px] font-semibold text-sky-700 hover:bg-sky-100 transition-colors">
+            <i data-lucide="twitter" class="w-3.5 h-3.5"></i>Twitter
+          </button>
+          <button onclick="shareRef('telegram')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>Telegram
+          </button>
+          <button onclick="shareRef('sms')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-100 text-[11px] font-semibold text-amber-700 hover:bg-amber-100 transition-colors">
+            <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>SMS
+          </button>
+        </div>
+      </div>
+
+      <!-- Referral Stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Total Direct</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">50</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">+5 this week</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Total Indirect</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">49</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">+8 this week</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">From Direct</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 17,500</p>
+          <p class="text-[10px] text-slate-400 mt-1">50 × KES 350</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">From Indirect</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 7,350</p>
+          <p class="text-[10px] text-slate-400 mt-1">49 × KES 150</p>
+        </div>
+      </div>
+
+      <!-- Team List -->
+      <div class="dash-card overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-surface-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 class="text-sm font-semibold text-brand-900">Your Referral Team</h3>
+          <div class="flex items-center gap-2">
+            <select id="teamFilter" class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto" onchange="filterTeam()">
+              <option value="all">All Members</option>
+              <option value="direct">Direct Only</option>
+              <option value="indirect">Indirect Only</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-surface-100">
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Member</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Type</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">You Earned</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Their Referrals</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Joined</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="teamTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== WITHDRAW ==================== -->
+    <div id="page-withdraw" class="page-panel">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Withdraw Form -->
+        <div class="lg:col-span-2">
+          <div class="dash-card p-5 sm:p-6 mb-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-1">Withdraw to M-Pesa</h3>
+            <p class="text-[12px] text-slate-400 font-light mb-6">Funds are sent instantly to your M-Pesa number. Minimum withdrawal: KES 500.</p>
+
+            <form id="withdrawForm" onsubmit="handleWithdraw(event)" novalidate>
+              <!-- Amount -->
+              <div class="mb-5">
+                <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Amount (KES)</label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">KES</span>
+                  <input type="number" id="withdrawAmount" class="form-input pl-14" placeholder="Enter amount" min="500" />
+                </div>
+                <div id="withdrawAmountError" class="error-msg"><i data-lucide="alert-circle" class="w-3 h-3"></i><span></span></div>
+                <!-- Quick Amounts -->
+                <div class="flex flex-wrap gap-2 mt-3">
+                  <button type="button" onclick="setWithdrawAmount(500)" class="px-3 py-1.5 rounded-lg border border-surface-200 text-[11px] font-medium text-slate-500 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors">KES 500</button>
+                  <button type="button" onclick="setWithdrawAmount(1000)" class="px-3 py-1.5 rounded-lg border border-surface-200 text-[11px] font-medium text-slate-500 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors">KES 1,000</button>
+                  <button type="button" onclick="setWithdrawAmount(2500)" class="px-3 py-1.5 rounded-lg border border-surface-200 text-[11px] font-medium text-slate-500 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors">KES 2,500</button>
+                  <button type="button" onclick="setWithdrawAmount(5000)" class="px-3 py-1.5 rounded-lg border border-surface-200 text-[11px] font-medium text-slate-500 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors">KES 5,000</button>
+                  <button type="button" onclick="setWithdrawAmount(10000)" class="px-3 py-1.5 rounded-lg border border-surface-200 text-[11px] font-medium text-slate-500 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 transition-colors">KES 10,000</button>
+                  <button type="button" onclick="setWithdrawAmount(24850)" class="px-3 py-1.5 rounded-lg border border-gold-200 text-[11px] font-medium text-gold-700 bg-gold-50 hover:bg-gold-100 transition-colors">Withdraw All</button>
+                </div>
+              </div>
+
+              <!-- M-Pesa Number -->
+              <div class="mb-5">
+                <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">M-Pesa Phone Number</label>
+                <div class="relative">
+                  <div class="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-slate-400"></i>
+                    <span class="text-[12px] font-medium text-slate-500">+254</span>
+                  </div>
+                  <input type="tel" id="withdrawPhone" class="form-input" style="padding-left:82px" value="712 345 678" readonly />
+                </div>
+              </div>
+
+              <!-- Note -->
+              <div class="mb-6">
+                <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Note <span class="text-slate-300 normal-case font-normal">(Optional)</span></label>
+                <input type="text" id="withdrawNote" class="form-input" style="padding-left:14px" placeholder="e.g. School fees, rent, savings" />
+              </div>
+
+              <!-- Summary -->
+              <div class="bg-surface-50 rounded-xl p-4 mb-6 border border-surface-100">
+                <div class="flex justify-between mb-2"><span class="text-[12px] text-slate-500">Withdrawal Amount</span><span id="withdrawSummaryAmt" class="text-[13px] font-semibold text-brand-900">KES 0</span></div>
+                <div class="flex justify-between mb-2"><span class="text-[12px] text-slate-500">Processing Fee</span><span class="text-[13px] font-semibold text-emerald-600">FREE</span></div>
+                <div class="h-px bg-surface-200 my-2"></div>
+                <div class="flex justify-between"><span class="text-[12px] font-semibold text-brand-900">You Receive</span><span id="withdrawSummaryReceive" class="text-[14px] font-bold text-brand-800">KES 0</span></div>
+              </div>
+
+              <button type="submit" id="withdrawBtn" class="cta-green w-full text-white text-[14px] font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+                <i data-lucide="download" class="w-4 h-4" id="withdrawBtnIcon"></i>
+                <span id="withdrawBtnText">Withdraw to M-Pesa</span>
+                <svg id="withdrawSpinner" class="hidden animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+              </button>
+            </form>
+          </div>
+
+          <!-- Withdrawal History -->
+          <div class="dash-card overflow-hidden">
+            <div class="p-5 border-b border-surface-100">
+              <h3 class="text-sm font-semibold text-brand-900">Withdrawal History</h3>
+            </div>
+            <div class="divide-y divide-surface-100" id="withdrawHistory"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="space-y-6">
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Withdrawal Info</h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3"><div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-600"></i></div><div><p class="text-[12px] font-medium text-brand-900">Instant Processing</p><p class="text-[11px] text-slate-400 font-light">Funds arrive in your M-Pesa within seconds.</p></div></div>
+              <div class="flex items-start gap-3"><div class="w-7 h-7 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="coins" class="w-3.5 h-3.5 text-brand-600"></i></div><div><p class="text-[12px] font-medium text-brand-900">Zero Fees</p><p class="text-[11px] text-slate-400 font-light">No deductions. You get exactly what you withdraw.</p></div></div>
+              <div class="flex items-start gap-3"><div class="w-7 h-7 rounded-lg bg-gold-50 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-gold-600"></i></div><div><p class="text-[12px] font-medium text-brand-900">24/7 Available</p><p class="text-[11px] text-slate-400 font-light">Withdraw anytime, day or night, including holidays.</p></div></div>
+              <div class="flex items-start gap-3"><div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0 mt-0.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-600"></i></div><div><p class="text-[12px] font-medium text-brand-900">Secure Transactions</p><p class="text-[11px] text-slate-400 font-light">All withdrawals encrypted and verified via M-Pesa.</p></div></div>
+            </div>
+          </div>
+          <div class="dash-card p-5">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl mpesa-badge flex items-center justify-center"><i data-lucide="smartphone" class="w-5 h-5 text-white"></i></div>
+              <div><p class="text-[12px] font-semibold text-brand-900">Your M-Pesa</p><p class="text-[11px] text-slate-400">+254 712 345 678</p></div>
+            </div>
+            <p class="text-[11px] text-slate-400 font-light">To change your withdrawal number, go to <button onclick="switchPage('profile')" class="text-brand-600 font-medium hover:underline">Profile & Settings</button>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== TRANSACTIONS ==================== -->
+    <div id="page-transactions" class="page-panel">
+      <div class="dash-card overflow-hidden">
+        <div class="p-5 sm:p-6 border-b border-surface-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 class="text-sm font-semibold text-brand-900">All Transactions</h3>
+          <div class="flex items-center gap-2">
+            <select id="txTypeFilter" class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto" onchange="filterTransactions()">
+              <option value="all">All Types</option>
+              <option value="direct">Direct Commission</option>
+              <option value="upline">Upline Override</option>
+              <option value="bonus">Bonus</option>
+              <option value="withdrawal">Withdrawal</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-surface-100">
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Date & Time</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Description</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Type</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-right">Amount</th>
+                <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-right">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="txTableBody"></tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="p-4 border-t border-surface-100 flex items-center justify-between">
+          <p class="text-[11px] text-slate-400">Showing 1-15 of 103 transactions</p>
+          <div class="flex items-center gap-1">
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400 hover:bg-surface-50 transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <button class="w-8 h-8 rounded-lg bg-brand-600 text-white text-[12px] font-semibold flex items-center justify-center">1</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">2</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">3</button>
+            <span class="text-slate-400 px-1">…</span>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">7</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400 hover:bg-surface-50 transition-colors"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== PROFILE ==================== -->
+    <div id="page-profile" class="page-panel">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Personal Info -->
+          <div class="dash-card p-5 sm:p-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-5">Personal Information</h3>
+            <form id="profileForm" onsubmit="handleProfileSave(event)" novalidate>
+              <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Full Name</label>
+                  <input type="text" id="profName" class="form-input" style="padding-left:14px" value="John Kamau" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Email</label>
+                  <input type="email" id="profEmail" class="form-input" style="padding-left:14px" value="john.kamau@email.com" />
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">M-Pesa Number</label>
+                  <input type="tel" class="form-input" style="padding-left:14px" value="+254 712 345 678" readonly />
+                  <p class="text-[10px] text-slate-400 mt-1">Contact support to change your M-Pesa number</p>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">County</label>
+                  <select class="form-select" style="padding-left:14px"><option>Nairobi</option><option>Mombasa</option><option>Kisumu</option><option>Nakuru</option></select>
+                </div>
+              </div>
+              <div class="mb-5">
+                <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Referral Code</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" class="form-input flex-1" style="padding-left:14px" value="JOHN-K712345678" readonly />
+                  <button onclick="copyText('JOHN-K712345678')" class="px-4 py-2.5 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 hover:bg-surface-50 transition-colors flex items-center gap-1.5"><i data-lucide="copy" class="w-3.5 h-3.5"></i>Copy</button>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Share this code for people to enter when registering</p>
+              </div>
+              <button type="submit" id="profileSaveBtn" class="cta-primary text-white text-[13px] font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span id="profileSaveText">Save Changes</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Change Password -->
+          <div class="dash-card p-5 sm:p-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-5">Change Password</h3>
+            <form onsubmit="handlePasswordChange(event)" novalidate>
+              <div class="space-y-4 mb-5">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Current Password</label>
+                  <input type="password" id="currentPw" class="form-input" style="padding-left:14px" placeholder="Enter current password" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">New Password</label>
+                  <input type="password" id="newPw" class="form-input" style="padding-left:14px" placeholder="Min 6 characters" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Confirm New Password</label>
+                  <input type="password" id="confirmPw" class="form-input" style="padding-left:14px" placeholder="Re-enter new password" />
+                </div>
+              </div>
+              <button type="submit" class="px-6 py-2.5 rounded-lg border border-surface-200 text-[13px] font-medium text-slate-600 hover:bg-surface-50 transition-colors flex items-center gap-2">
+                <i data-lucide="lock" class="w-4 h-4"></i>Update Password
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Profile Sidebar -->
+        <div class="space-y-6">
+          <div class="dash-card p-6 text-center">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <span class="text-white text-2xl font-bold">JK</span>
+            </div>
+            <h3 class="text-base font-semibold text-brand-900">John Kamau</h3>
+            <p class="text-[12px] text-slate-400 mt-0.5">+254 712 345 678</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Nairobi, Kenya</p>
+            <div class="flex justify-center gap-1.5 mt-3">
+              <span class="badge bg-brand-50 text-brand-700 border border-brand-100">Active</span>
+              <span class="badge bg-gold-50 text-gold-700 border border-gold-100">Verified</span>
+            </div>
+            <div class="mt-5 pt-5 border-t border-surface-100 text-left space-y-3">
+              <div class="flex justify-between"><span class="text-[12px] text-slate-400">Member Since</span><span class="text-[12px] font-medium text-brand-900">Oct 15, 2024</span></div>
+              <div class="flex justify-between"><span class="text-[12px] text-slate-400">Total Earned</span><span class="text-[12px] font-medium text-brand-900">KES 25,350</span></div>
+              <div class="flex justify-between"><span class="text-[12px] text-slate-400">Total Withdrawn</span><span class="text-[12px] font-medium text-brand-900">KES 12,500</span></div>
+            </div>
+          </div>
+
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-3">Account Details</h3>
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between py-2 border-b border-surface-100">
+                <span class="text-[12px] text-slate-400">Account ID</span>
+                <span class="text-[12px] font-mono font-medium text-brand-900">ZA-002847</span>
+              </div>
+              <div class="flex items-center justify-between py-2 border-b border-surface-100">
+                <span class="text-[12px] text-slate-400">Membership</span>
+                <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100">Paid</span>
+              </div>
+              <div class="flex items-center justify-between py-2">
+                <span class="text-[12px] text-slate-400">Referred By</span>
+                <span class="text-[12px] font-medium text-brand-900">Sarah M.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+  lucide.createIcons();
+
+  // ===== DATA =====
+  const BALANCE = 24850;
+  const teamData = [
+    { name:'Mary Ochieng', initials:'MO', type:'direct', earned:350, refs:3, date:'Mar 18, 2025', status:'active', color:'bg-pink-100 text-pink-700' },
+    { name:'Peter Mwangi', initials:'PM', type:'direct', earned:350, refs:5, date:'Mar 17, 2025', status:'active', color:'bg-blue-100 text-blue-700' },
+    { name:'Faith Wanjiku', initials:'FW', type:'direct', earned:350, refs:2, date:'Mar 16, 2025', status:'active', color:'bg-purple-100 text-purple-700' },
+    { name:'James Otieno', initials:'JO', type:'indirect', earned:150, refs:0, date:'Mar 16, 2025', status:'active', color:'bg-amber-100 text-amber-700' },
+    { name:'Grace Nyambura', initials:'GN', type:'direct', earned:350, refs:4, date:'Mar 15, 2025', status:'active', color:'bg-emerald-100 text-emerald-700' },
+    { name:'David Kiprop', initials:'DK', type:'indirect', earned:150, refs:1, date:'Mar 15, 2025', status:'active', color:'bg-cyan-100 text-cyan-700' },
+    { name:'Lucy Akinyi', initials:'LA', type:'direct', earned:350, refs:0, date:'Mar 14, 2025', status:'active', color:'bg-rose-100 text-rose-700' },
+    { name:'Samuel Karanja', initials:'SK', type:'indirect', earned:150, refs:2, date:'Mar 14, 2025', status:'active', color:'bg-indigo-100 text-indigo-700' },
+    { name:'Esther Njeri', initials:'EN', type:'direct', earned:350, refs:6, date:'Mar 13, 2025', status:'active', color:'bg-teal-100 text-teal-700' },
+    { name:'Kevin Musyoka', initials:'KM', type:'indirect', earned:150, refs:0, date:'Mar 12, 2025', status:'active', color:'bg-orange-100 text-orange-700' },
+    { name:'Ann Wairimu', initials:'AW', type:'direct', earned:350, refs:1, date:'Mar 11, 2025', status:'active', color:'bg-lime-100 text-lime-700' },
+    { name:'Brian Chege', initials:'BC', type:'direct', earned:350, refs:3, date:'Mar 10, 2025', status:'active', color:'bg-sky-100 text-sky-700' },
+  ];
+
+  const transactionData = [
+    { date:'Mar 18, 2025 14:32', desc:'Direct Commission — Mary Ochieng', type:'direct', amount:350, balance:24850 },
+    { date:'Mar 18, 2025 14:14', desc:'Upline Override — via Peter Mwangi', type:'upline', amount:150, balance:24500 },
+    { date:'Mar 18, 2025 11:05', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-5000, balance:24350 },
+    { date:'Mar 17, 2025 19:22', desc:'Direct Commission — Peter Mwangi', type:'direct', amount:350, balance:29350 },
+    { date:'Mar 17, 2025 16:40', desc:'Direct Commission — Peter Mwangi', type:'direct', amount:350, balance:29350 },
+    { date:'Mar 16, 2025 20:15', desc:'Direct Commission — Faith Wanjiku', type:'direct', amount:350, balance:29000 },
+    { date:'Mar 16, 2025 18:33', desc:'Upline Override — via Peter Mwangi', type:'upline', amount:150, balance:28650 },
+    { date:'Mar 16, 2025 15:10', desc:'Upline Override — via Mary Ochieng', type:'upline', amount:150, balance:28500 },
+    { date:'Mar 15, 2025 22:08', desc:'Direct Commission — Grace Nyambura', type:'direct', amount:350, balance:28350 },
+    { date:'Mar 15, 2025 19:45', desc:'Upline Override — via Grace Nyambura', type:'upline', amount:150, balance:28000 },
+    { date:'Mar 15, 2025 12:30', desc:'Upline Override — via Esther Njeri', type:'upline', amount:150, balance:27850 },
+    { date:'Mar 14, 2025 21:12', desc:'Direct Commission — Lucy Akinyi', type:'direct', amount:350, balance:27700 },
+    { date:'Mar 14, 2025 17:55', desc:'Upline Override — via David Kiprop', type:'upline', amount:150, balance:27350 },
+    { date:'Mar 14, 2025 09:20', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-5000, balance:27200 },
+    { date:'Mar 13, 2025 20:44', desc:'Direct Commission — Esther Njeri', type:'direct', amount:350, balance:32200 },
+    { date:'Mar 13, 2025 16:18', desc:'Upline Override — via Esther Njeri', type:'upline', amount:150, balance:31850 },
+    { date:'Mar 13, 2025 11:02', desc:'Upline Override — via Brian Chege', type:'upline', amount:150, balance:31700 },
+    { date:'Mar 12, 2025 23:15', desc:'Upline Override — via Samuel Karanja', type:'upline', amount:150, balance:31550 },
+    { date:'Mar 12, 2025 14:38', desc:'Direct Commission — Kevin Musyoka (Indirect)', type:'upline', amount:150, balance:31400 },
+    { date:'Mar 11, 2025 19:50', desc:'Direct Commission — Ann Wairimu', type:'direct', amount:350, balance:31250 },
+    { date:'Mar 11, 2025 10:22', desc:'Upline Override — via Ann Wairimu', type:'upline', amount:150, balance:30900 },
+    { date:'Mar 10, 2025 21:33', desc:'Direct Commission — Brian Chege', type:'direct', amount:350, balance:30750 },
+    { date:'Mar 10, 2025 15:07', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-2500, balance:30400 },
+    { date:'Mar 9, 2025 22:41', desc:'Upline Override — via Faith Wanjiku', type:'upline', amount:150, balance:32900 },
+    { date:'Mar 9, 2025 18:16', desc:'Upline Override — via Grace Nyambura', type:'upline', amount:150, balance:32750 },
+    { date:'Mar 8, 2025 20:55', desc:'Direct Commission — Samuel Karanja (Indirect)', type:'upline', amount:150, balance:32600 },
+    { date:'Oct 15, 2024 10:00', desc:'Welcome Bonus — New Member', type:'bonus', amount:500, balance:500 },
+  ];
+
+  const withdrawHistoryData = [
+    { date:'Mar 18, 2025 11:05', amount:5000, phone:'+254 712 345 678', status:'completed', note:'Personal use' },
+    { date:'Mar 14, 2025 09:20', amount:5000, phone:'+254 712 345 678', status:'completed', note:'Rent' },
+    { date:'Mar 10, 2025 15:07', amount:2500, phone:'+254 712 345 678', status:'completed', note:'Savings' },
+    { date:'Feb 28, 2025 12:30', amount:5000, phone:'+254 712 345 678', status:'completed', note:'' },
+    { date:'Feb 15, 2025 09:15', amount:1000, phone:'+254 712 345 678', status:'completed', note:'Airtime' },
+    { date:'Jan 30, 2025 16:45', amount:5000, phone:'+254 712 345 678', status:'completed', note:'School fees' },
+  ];
+
+
+  // ===== SIDEBAR TOGGLE =====
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+
+  // ===== PAGE SWITCHING =====
+  const pageTitles = {
+    overview: 'Overview',
+    referrals: 'Referrals & Team',
+    withdraw: 'Withdraw Funds',
+    transactions: 'Transaction History',
+    profile: 'Profile & Settings'
+  };
+
+  function switchPage(page) {
+    // Update nav
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const activeNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (activeNav) activeNav.classList.add('active');
+
+    // Update panels
+    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('page-' + page);
+    if (panel) panel.classList.add('active');
+
+    // Update title
+    document.getElementById('pageTitle').textContent = pageTitles[page] || 'Dashboard';
+
+    // Close mobile sidebar
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+
+    // Re-render dynamic content
+    if (page === 'referrals') renderTeamTable('all');
+    if (page === 'transactions') renderTransactions('all');
+    if (page === 'withdraw') renderWithdrawHistory();
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
+  // ===== COPY TO CLIPBOARD =====
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => showToast('Copied: ' + text));
+  }
+
+  function copyRefLink() {
+    const link = document.getElementById('refLink').textContent;
+    navigator.clipboard.writeText('https://' + link).then(() => showToast('Referral link copied to clipboard!'));
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById('copyToast');
+    document.getElementById('copyToastText').textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+
+  // ===== SHARE REFERRAL =====
+  function shareRef(platform) {
+    const link = 'https://' + document.getElementById('refLink').textContent;
+    const text = 'Join ZuriAgency and earn KES 500 bonus instantly! I\'ve already earned from referrals. Check it out: ' + link;
+    let url = '';
+
+    switch(platform) {
+      case 'whatsapp':
+        url = 'https://wa.me/?text=' + encodeURIComponent(text);
+        break;
+      case 'facebook':
+        url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link);
+        break;
+      case 'twitter':
+        url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+        break;
+      case 'telegram':
+        url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
+        break;
+      case 'sms':
+        url = 'sms:?body=' + encodeURIComponent(text);
+        break;
+    }
+    if (url) window.open(url, '_blank');
+  }
+
+
+  // ===== TEAM TABLE =====
+  function renderTeamTable(filter) {
+    const tbody = document.getElementById('teamTableBody');
+    let data = teamData;
+    if (filter === 'direct') data = teamData.filter(t => t.type === 'direct');
+    if (filter === 'indirect') data = teamData.filter(t => t.type === 'indirect');
+
+    tbody.innerHTML = data.map(m => `
+      <tr class="tx-row border-b border-surface-50">
+        <td class="px-5 py-3.5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg ${m.color} flex items-center justify-center text-[10px] font-bold flex-shrink-0">${m.initials}</div>
+            <span class="text-[13px] font-medium text-brand-900">${m.name}</span>
+          </div>
+        </td>
+        <td class="px-5 py-3.5">
+          <span class="badge ${m.type === 'direct' ? 'bg-brand-50 text-brand-700 border border-brand-100' : 'bg-gold-50 text-gold-700 border border-gold-100'}">${m.type === 'direct' ? 'Direct' : 'Indirect'}</span>
+        </td>
+        <td class="px-5 py-3.5 text-[13px] font-semibold ${m.type === 'direct' ? 'text-brand-800' : 'text-gold-700'}">KES ${m.earned.toLocaleString()}</td>
+        <td class="px-5 py-3.5 text-[13px] text-slate-500">${m.refs}</td>
+        <td class="px-5 py-3.5 text-[12px] text-slate-400">${m.date}</td>
+        <td class="px-5 py-3.5"><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span></td>
+      </tr>
+    `).join('');
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-slate-400">No members found for this filter.</td></tr>';
+    }
+  }
+
+  function filterTeam() {
+    renderTeamTable(document.getElementById('teamFilter').value);
+  }
+
+
+  // ===== TRANSACTIONS TABLE =====
+  function renderTransactions(filter) {
+    const tbody = document.getElementById('txTableBody');
+    let data = transactionData;
+    if (filter !== 'all') data = transactionData.filter(t => t.type === filter);
+
+    const typeConfig = {
+      direct: { label:'Direct', class:'bg-brand-50 text-brand-700 border border-brand-100' },
+      upline: { label:'Upline', class:'bg-gold-50 text-gold-700 border border-gold-100' },
+      bonus: { label:'Bonus', class:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+      withdrawal: { label:'Withdrawal', class:'bg-red-50 text-red-600 border border-red-100' },
+    };
+
+    tbody.innerHTML = data.map(tx => {
+      const cfg = typeConfig[tx.type] || typeConfig.direct;
+      const isNeg = tx.amount < 0;
+      return `
+        <tr class="tx-row border-b border-surface-50">
+          <td class="px-5 py-3.5 text-[12px] text-slate-400 whitespace-nowrap">${tx.date}</td>
+          <td class="px-5 py-3.5 text-[13px] text-brand-900 font-medium">${tx.desc}</td>
+          <td class="px-5 py-3.5"><span class="badge ${cfg.class}">${cfg.label}</span></td>
+          <td class="px-5 py-3.5 text-[13px] font-semibold text-right ${isNeg ? 'text-red-500' : 'text-emerald-600'}">${isNeg ? '' : '+'}KES ${Math.abs(tx.amount).toLocaleString()}</td>
+          <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${tx.balance.toLocaleString()}</td>
+        </tr>
+      `;
+    }).join('');
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-5 py-10 text-center text-[13px] text-slate-400">No transactions found for this filter.</td></tr>';
+    }
+  }
+
+  function filterTransactions() {
+    renderTransactions(document.getElementById('txTypeFilter').value);
+  }
+
+
+  // ===== WITHDRAW =====
+  function setWithdrawAmount(amt) {
+    document.getElementById('withdrawAmount').value = amt;
+    updateWithdrawSummary();
+  }
+
+  function updateWithdrawSummary() {
+    const amt = parseInt(document.getElementById('withdrawAmount').value) || 0;
+    document.getElementById('withdrawSummaryAmt').textContent = 'KES ' + amt.toLocaleString();
+    document.getElementById('withdrawSummaryReceive').textContent = 'KES ' + amt.toLocaleString();
+  }
+
+  document.getElementById('withdrawAmount')?.addEventListener('input', updateWithdrawSummary);
+
+  function handleWithdraw(e) {
+    e.preventDefault();
+    const amt = parseInt(document.getElementById('withdrawAmount').value) || 0;
+    const errEl = document.getElementById('withdrawAmountError');
+
+    if (!amt || amt < 500) {
+      errEl.querySelector('span').textContent = 'Minimum withdrawal amount is KES 500';
+      errEl.classList.add('visible');
+      document.getElementById('withdrawAmount').classList.add('error');
+      return;
+    }
+    if (amt > BALANCE) {
+      errEl.querySelector('span').textContent = 'Insufficient balance. Your balance is KES ' + BALANCE.toLocaleString();
+      errEl.classList.add('visible');
+      document.getElementById('withdrawAmount').classList.add('error');
+      return;
+    }
+
+    errEl.classList.remove('visible');
+    document.getElementById('withdrawAmount').classList.remove('error');
+
+    const btn = document.getElementById('withdrawBtn');
+    const btnText = document.getElementById('withdrawBtnText');
+    const btnIcon = document.getElementById('withdrawBtnIcon');
+    const spinner = document.getElementById('withdrawSpinner');
+
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btnText.textContent = 'Processing withdrawal...';
+    btnIcon.classList.add('hidden');
+    spinner.classList.remove('hidden');
+
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btnText.textContent = 'Withdraw to M-Pesa';
+      btnIcon.classList.remove('hidden');
+      spinner.classList.add('hidden');
+      document.getElementById('withdrawAmount').value = '';
+      updateWithdrawSummary();
+
+      showToast('KES ' + amt.toLocaleString() + ' sent to your M-Pesa successfully!');
+      renderWithdrawHistory();
+    }, 3000);
+  }
+
+  function renderWithdrawHistory() {
+    const container = document.getElementById('withdrawHistory');
+    container.innerHTML = withdrawHistoryData.map(w => `
+      <div class="flex items-center gap-4 px-5 py-4 tx-row">
+        <div class="w-10 h-10 rounded-xl ${w.status === 'completed' ? 'bg-emerald-50' : 'bg-amber-50'} flex items-center justify-center flex-shrink-0">
+          <i data-lucide="${w.status === 'completed' ? 'check-circle' : 'clock'}" class="w-5 h-5 ${w.status === 'completed' ? 'text-emerald-500' : 'text-amber-500'}"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-[13px] font-medium text-brand-900">KES ${w.amount.toLocaleString()}</p>
+          <p class="text-[11px] text-slate-400">${w.phone} • ${w.date}${w.note ? ' • ' + w.note : ''}</p>
+        </div>
+        <span class="badge ${w.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-amber-50 text-amber-700 border border-amber-100'} flex-shrink-0">${w.status === 'completed' ? 'Completed' : 'Pending'}</span>
+      </div>
+    `).join('');
+
+    if (withdrawHistoryData.length === 0) {
+      container.innerHTML = '<div class="p-8 text-center text-[13px] text-slate-400">No withdrawals yet.</div>';
+    }
+
+    lucide.createIcons();
+  }
+
+
+  // ===== PROFILE SAVE =====
+  function handleProfileSave(e) {
+    e.preventDefault();
+    const btn = document.getElementById('profileSaveBtn');
+    const text = document.getElementById('profileSaveText');
+
+    text.textContent = 'Saving...';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+
+    setTimeout(() => {
+      text.textContent = 'Saved!';
+      btn.style.opacity = '1';
+      showToast('Profile updated successfully!');
+
+      setTimeout(() => {
+        text.textContent = 'Save Changes';
+        btn.disabled = false;
+      }, 1500);
+    }, 1200);
+  }
+
+  function handlePasswordChange(e) {
+    e.preventDefault();
+    const curr = document.getElementById('currentPw').value;
+    const newP = document.getElementById('newPw').value;
+    const conf = document.getElementById('confirmPw').value;
+
+    if (!curr || !newP || !conf) {
+      showToast('Please fill in all password fields');
+      return;
+    }
+    if (newP.length < 6) {
+      showToast('New password must be at least 6 characters');
+      return;
+    }
+    if (newP !== conf) {
+      showToast('New passwords do not match');
+      return;
+    }
+
+    showToast('Password updated successfully!');
+    document.getElementById('currentPw').value = '';
+    document.getElementById('newPw').value = '';
+    document.getElementById('confirmPw').value = '';
+  }
+
+
+  // ===== INIT =====
+  renderTeamTable('all');
+  renderTransactions('all');
+  renderWithdrawHistory();
+  updateWithdrawSummary();
+</script>
+
+</body>
+</html>

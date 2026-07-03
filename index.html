@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZuriAgency.co.ke — Refer. Earn. Grow.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD',
+              400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB', 700: '#1D4ED8',
+              800: '#1E40AF', 900: '#0F2B5B',
+            },
+            gold: {
+              50: '#FFFBEB', 100: '#FEF3C7', 200: '#FDE68A', 300: '#FCD34D',
+              400: '#FBBF24', 500: '#D4A843', 600: '#C9952B', 700: '#B45309',
+            },
+            surface: {
+              0: '#FFFFFF', 50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0', 300: '#CBD5E1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #F8FAFC; color: #0F172A; overflow-x: hidden; }
+
+    @keyframes globalFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    body { animation: globalFadeIn 0.6s ease-out forwards; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .reveal-visible { opacity: 1; transform: translateY(0); }
+
+    @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+    .animate-ping-slow { animation: ping 2s cubic-bezier(0,0,0.2,1) infinite; }
+
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+    .animate-float { animation: float 5s ease-in-out infinite; }
+
+    @keyframes floatAlt { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+    .animate-float-alt { animation: floatAlt 6s ease-in-out infinite; }
+
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    @keyframes pulse-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+    @keyframes rotate-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .animate-rotate-slow { animation: rotate-slow 30s linear infinite; }
+
+    @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    .gradient-text-blue {
+      background: linear-gradient(135deg, #1E40AF, #2563EB, #3B82F6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #C9952B, #D4A843, #FBBF24);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-text-mixed {
+      background: linear-gradient(135deg, #1E40AF, #2563EB, #D4A843);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .dot-grid {
+      background-image: radial-gradient(circle, #CBD5E1 0.8px, transparent 0.8px);
+      background-size: 24px 24px;
+    }
+    .dot-grid-fine {
+      background-image: radial-gradient(circle, #E2E8F0 0.5px, transparent 0.5px);
+      background-size: 16px 16px;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .card:hover {
+      border-color: #93C5FD;
+      box-shadow: 0 8px 30px rgba(37,99,235,0.08), 0 2px 8px rgba(37,99,235,0.04);
+      transform: translateY(-3px);
+    }
+
+    .card-gold:hover {
+      border-color: #FDE68A;
+      box-shadow: 0 8px 30px rgba(212,168,67,0.1), 0 2px 8px rgba(212,168,67,0.05);
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      box-shadow: 0 4px 20px rgba(37,99,235,0.3), 0 1px 3px rgba(37,99,235,0.2);
+      transition: all 0.3s ease;
+    }
+    .cta-primary:hover {
+      box-shadow: 0 8px 35px rgba(37,99,235,0.4), 0 2px 6px rgba(37,99,235,0.25);
+      transform: translateY(-2px);
+    }
+
+    .cta-gold {
+      background: linear-gradient(135deg, #C9952B, #D4A843);
+      box-shadow: 0 4px 20px rgba(212,168,67,0.3), 0 1px 3px rgba(212,168,67,0.2);
+      transition: all 0.3s ease;
+    }
+    .cta-gold:hover {
+      box-shadow: 0 8px 35px rgba(212,168,67,0.4), 0 2px 6px rgba(212,168,67,0.25);
+      transform: translateY(-2px);
+    }
+
+    .cta-outline {
+      border: 1.5px solid #2563EB;
+      color: #2563EB;
+      transition: all 0.3s ease;
+    }
+    .cta-outline:hover {
+      background: #2563EB;
+      color: white;
+    }
+
+    .glass-light {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226,232,240,0.8);
+    }
+
+    .nav-blur {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(248,250,252,0.85);
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .step-connector {
+      position: relative;
+    }
+    .step-connector::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -2rem;
+      width: 4rem;
+      height: 2px;
+      background: linear-gradient(90deg, #93C5FD, transparent);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+    .faq-answer.open { max-height: 300px; padding-top: 12px; }
+
+    .feature-item { transition: all 0.3s ease; }
+    .feature-item:hover { background: #F8FAFC; }
+
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .mobile-menu.open { max-height: 500px; }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2563EB, #D4A843);
+    }
+
+    .badge-glow {
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+    }
+
+    .hex-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L50 17.5 L50 42.5 L30 55 L10 42.5 L10 17.5 Z' fill='none' stroke='%23E2E8F0' stroke-width='0.5'/%3E%3C/svg%3E");
+      background-size: 60px 60px;
+    }
+
+    input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px; outline: none; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+      cursor: pointer;
+    }
+
+    @media (max-width: 767px) {
+      .step-connector::after { display: none; }
+    }
+  </style>
+</head>
+<body class="font-inter antialiased">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 flex items-center justify-center shadow-md">
+          <span class="text-white font-bold text-xs">Z</span>
+        </div>
+        <span class="text-brand-900 font-semibold text-sm tracking-tight">ZuriAgency<span class="text-brand-600">.co.ke</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#how" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">How It Works</a>
+        <a href="#earnings" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">Earnings</a>
+        <a href="#why" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">Why Us</a>
+        <a href="#faq" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">FAQ</a>
+        <a href="#join" class="cta-primary text-white text-[13px] font-semibold px-6 py-2.5 rounded-xl inline-flex items-center gap-2">
+          Join Now — KES 1,000
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+      <button id="mobileToggle" class="md:hidden text-slate-500 hover:text-brand-700 transition-colors">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="mobile-menu md:hidden bg-white border-t border-surface-200">
+      <div class="px-4 py-4 flex flex-col gap-3">
+        <a href="#how" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">How It Works</a>
+        <a href="#earnings" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">Earnings</a>
+        <a href="#why" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">Why Us</a>
+        <a href="#faq" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">FAQ</a>
+        <a href="#join" class="cta-primary text-white text-sm font-semibold px-5 py-3 rounded-xl text-center mt-2 mobile-link">Join Now — KES 1,000</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ==================== HERO ==================== -->
+  <section class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <!-- Background Orbs -->
+    <div class="hero-orb w-[500px] h-[500px] bg-brand-200 top-20 -left-40 opacity-40 animate-pulse-glow"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-gold-100 top-40 -right-32 opacity-50 animate-pulse-glow" style="animation-delay: 2s;"></div>
+    <div class="hero-orb w-[300px] h-[300px] bg-brand-100 bottom-20 left-1/3 opacity-30 animate-pulse-glow" style="animation-delay: 1s;"></div>
+
+    <!-- Dot Grid -->
+    <div class="absolute inset-0 dot-grid opacity-40 pointer-events-none"></div>
+
+    <!-- Geometric Decorations -->
+    <div class="absolute top-32 right-[15%] w-20 h-20 border border-brand-200 rounded-2xl rotate-12 opacity-30 animate-float-alt hidden lg:block"></div>
+    <div class="absolute bottom-32 left-[10%] w-12 h-12 border border-gold-300 rounded-xl -rotate-6 opacity-40 animate-float hidden lg:block" style="animation-delay: 1.5s;"></div>
+    <div class="absolute top-1/2 right-[8%] w-3 h-3 bg-brand-400 rounded-full opacity-20 animate-ping-slow hidden lg:block"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <!-- Left Content -->
+        <div class="reveal">
+          <!-- Live Badge -->
+          <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-surface-200 shadow-sm mb-8 badge-glow">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-[12px] font-medium text-slate-600">5,000+ Kenyans already earning — Join the movement</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-[3.5rem] font-extralight leading-[1.08] tracking-tight text-brand-900 mb-6">
+            Turn Your Network Into a
+            <span class="gradient-text-blue font-light">Reliable Monthly</span>
+            <span class="gradient-text-gold font-light"> Income Stream</span>
+          </h1>
+
+          <p class="text-slate-600 text-base sm:text-[17px] font-light leading-[1.75] mb-4 max-w-lg">
+            ZuriAgency is Kenya's most straightforward referral income platform. When you refer someone, you earn <strong class="font-semibold text-brand-900">KES 350 instantly</strong> — no products, no inventory, no complicated systems. Just share your link and get paid.
+          </p>
+
+          <p class="text-slate-500 text-sm font-light leading-relaxed mb-8 max-w-lg">
+            Join today with just KES 1,000 and receive a <strong class="font-semibold text-gold-600">KES 500 welcome bonus</strong> credited to your account immediately. Your actual starting cost is only KES 500 — and you can recover that with just 2 referrals.
+          </p>
+
+          <!-- CTAs -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-10">
+            <a href="#join" class="cta-primary text-white text-sm font-semibold px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              Join Now — Get KES 500 Bonus
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#how" class="cta-outline text-sm font-semibold px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2.5">
+              <i data-lucide="play-circle" class="w-4 h-4"></i>
+              See How It Works
+            </a>
+          </div>
+
+          <!-- Trust Row -->
+          <div class="flex flex-wrap gap-x-6 gap-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center">
+                <i data-lucide="shield-check" class="w-4 h-4 text-brand-600"></i>
+              </div>
+              <div>
+                <p class="text-[11px] font-semibold text-brand-900 leading-none">100% Kenyan</p>
+                <p class="text-[10px] text-slate-400">Built locally</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-gold-50 flex items-center justify-center">
+                <i data-lucide="smartphone" class="w-4 h-4 text-gold-600"></i>
+              </div>
+              <div>
+                <p class="text-[11px] font-semibold text-brand-900 leading-none">M-Pesa Payments</p>
+                <p class="text-[10px] text-slate-400">Instant transfers</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                <i data-lucide="lock" class="w-4 h-4 text-emerald-600"></i>
+              </div>
+              <div>
+                <p class="text-[11px] font-semibold text-brand-900 leading-none">Secure Platform</p>
+                <p class="text-[10px] text-slate-400">Data protected</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Visual -->
+        <div class="reveal relative flex justify-center lg:justify-end" style="transition-delay: 200ms;">
+          <div class="relative">
+            <!-- Main Card -->
+            <div class="relative w-[300px] sm:w-[340px] bg-white rounded-2xl border border-surface-200 shadow-xl overflow-hidden animate-float">
+              <!-- Top Bar -->
+              <div class="h-1.5 bg-gradient-to-r from-brand-600 via-brand-400 to-gold-400"></div>
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-5">
+                  <div>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Your Dashboard</p>
+                    <p class="text-xl font-semibold text-brand-900 mt-1">Welcome Back!</p>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center">
+                    <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                  </div>
+                </div>
+
+                <!-- Balance -->
+                <div class="bg-gradient-to-br from-brand-800 to-brand-900 rounded-xl p-5 mb-5">
+                  <p class="text-[11px] text-brand-200 uppercase tracking-wider font-medium mb-1">Total Earnings</p>
+                  <p class="text-3xl font-light text-white">KES 24,850</p>
+                  <div class="flex items-center gap-1.5 mt-2">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <span class="text-[11px] text-emerald-400 font-medium">+KES 3,500 this week</span>
+                  </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                  <div class="bg-surface-50 rounded-lg p-3">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Direct</p>
+                    <p class="text-lg font-semibold text-brand-900">KES 17,500</p>
+                  </div>
+                  <div class="bg-surface-50 rounded-lg p-3">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Upline</p>
+                    <p class="text-lg font-semibold text-gold-600">KES 7,350</p>
+                  </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium mb-3">Recent Activity</p>
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between py-2 border-b border-surface-100">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center">
+                        <i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-600"></i>
+                      </div>
+                      <div>
+                        <p class="text-[12px] font-medium text-brand-900">Referral Bonus</p>
+                        <p class="text-[10px] text-slate-400">2 min ago</p>
+                      </div>
+                    </div>
+                    <span class="text-[13px] font-semibold text-emerald-600">+KES 350</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-7 h-7 rounded-full bg-gold-50 flex items-center justify-center">
+                        <i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-gold-600"></i>
+                      </div>
+                      <div>
+                        <p class="text-[12px] font-medium text-brand-900">Upline Override</p>
+                        <p class="text-[10px] text-slate-400">15 min ago</p>
+                      </div>
+                    </div>
+                    <span class="text-[13px] font-semibold text-gold-600">+KES 150</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Bonus Card -->
+            <div class="absolute -top-5 -left-6 bg-white rounded-xl border border-surface-200 shadow-lg p-3.5 animate-float-alt" style="animation-delay: 0.5s;">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
+                  <i data-lucide="gift" class="w-4 h-4 text-white"></i>
+                </div>
+                <div>
+                  <p class="text-[11px] font-semibold text-brand-900">Welcome Bonus</p>
+                  <p class="text-[13px] font-bold text-gold-600">+KES 500 Credited</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Members Card -->
+            <div class="absolute -bottom-5 -right-4 bg-white rounded-xl border border-surface-200 shadow-lg p-3 animate-float" style="animation-delay: 1s;">
+              <div class="flex items-center gap-2">
+                <div class="flex -space-x-2">
+                  <img src="https://picsum.photos/seed/m1k/36/36.jpg" class="w-7 h-7 rounded-full border-2 border-white object-cover" alt="" />
+                  <img src="https://picsum.photos/seed/m2k/36/36.jpg" class="w-7 h-7 rounded-full border-2 border-white object-cover" alt="" />
+                  <img src="https://picsum.photos/seed/m3k/36/36.jpg" class="w-7 h-7 rounded-full border-2 border-white object-cover" alt="" />
+                  <div class="w-7 h-7 rounded-full border-2 border-white bg-brand-100 flex items-center justify-center text-[8px] font-bold text-brand-700">+5K</div>
+                </div>
+                <p class="text-[11px] font-medium text-slate-600">Active members</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== SOCIAL PROOF BAR ==================== -->
+  <section class="relative py-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-4 relative z-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div class="stat-card bg-white rounded-xl border border-surface-200 p-4 sm:p-5 text-center reveal" style="transition-delay: 100ms;">
+          <p class="text-2xl sm:text-3xl font-light text-brand-800">5,000+</p>
+          <p class="text-[11px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Active Members</p>
+        </div>
+        <div class="stat-card bg-white rounded-xl border border-surface-200 p-4 sm:p-5 text-center reveal" style="transition-delay: 150ms;">
+          <p class="text-2xl sm:text-3xl font-light text-brand-800">KES 2M+</p>
+          <p class="text-[11px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Total Paid Out</p>
+        </div>
+        <div class="stat-card bg-white rounded-xl border border-surface-200 p-4 sm:p-5 text-center reveal" style="transition-delay: 200ms;">
+          <p class="text-2xl sm:text-3xl font-light text-gold-600">KES 500</p>
+          <p class="text-[11px] text-slate-500 font-medium mt-1 uppercase tracking-wider">Sign-Up Bonus</p>
+        </div>
+        <div class="stat-card bg-white rounded-xl border border-surface-200 p-4 sm:p-5 text-center reveal" style="transition-delay: 250ms;">
+          <p class="text-2xl sm:text-3xl font-light text-brand-800">Instant</p>
+          <p class="text-[11px] text-slate-500 font-medium mt-1 uppercase tracking-wider">M-Pesa Payouts</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section id="how" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 hex-pattern opacity-30 pointer-events-none"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-brand-100 -bottom-40 -right-40 opacity-50"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 mb-5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-600"></i>
+          <span class="text-[11px] font-semibold text-brand-700 uppercase tracking-[0.15em]">Three Simple Steps</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">How ZuriAgency Works</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">No complicated systems to learn. No products to stock or deliver. ZuriAgency keeps everything remarkably simple so you can focus on what matters — growing your income through the people you already know.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+        <!-- Step 1 -->
+        <div class="reveal" style="transition-delay: 100ms;">
+          <div class="card p-7 h-full">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center shadow-md">
+                <span class="text-white font-bold text-sm">01</span>
+              </div>
+              <div class="h-px flex-1 bg-gradient-to-r from-brand-200 to-transparent"></div>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-5">
+              <i data-lucide="user-plus" class="w-7 h-7 text-brand-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-brand-900 mb-3">Join with KES 1,000</h3>
+            <p class="text-slate-500 text-sm font-light leading-[1.75]">Complete your one-time membership payment of KES 1,000 via M-Pesa. The moment your payment is confirmed, your unique referral link is activated and <strong class="font-medium text-brand-800">KES 500 is credited to your account as a welcome bonus</strong>. That's right — you start with money in your pocket before you've referred anyone.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="reveal" style="transition-delay: 200ms;">
+          <div class="card p-7 h-full">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center shadow-md">
+                <span class="text-white font-bold text-sm">02</span>
+              </div>
+              <div class="h-px flex-1 bg-gradient-to-r from-brand-200 to-transparent"></div>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-5">
+              <i data-lucide="share-2" class="w-7 h-7 text-brand-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-brand-900 mb-3">Share Your Referral Link</h3>
+            <p class="text-slate-500 text-sm font-light leading-[1.75]">Your personalized referral link is ready to share across WhatsApp, Facebook, Instagram, Twitter, SMS — anywhere your network lives. No scripts to memorize, no sales pitches to practice. Simply let people know about the opportunity and share your link. The platform handles everything else automatically.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="reveal" style="transition-delay: 300ms;">
+          <div class="card card-gold p-7 h-full border-gold-200">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center shadow-md">
+                <span class="text-white font-bold text-sm">03</span>
+              </div>
+              <div class="h-px flex-1 bg-gradient-to-r from-gold-200 to-transparent"></div>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gold-50 border border-gold-100 flex items-center justify-center mb-5">
+              <i data-lucide="wallet" class="w-7 h-7 text-gold-600"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-brand-900 mb-3">Earn Instant Commissions</h3>
+            <p class="text-slate-500 text-sm font-light leading-[1.75]">Every time someone joins through your link, <strong class="font-medium text-brand-800">KES 350 is sent directly to your M-Pesa instantly</strong>. But it doesn't stop there — when the people you referred start referring others, you earn an additional <strong class="font-medium text-gold-700">KES 150 per secondary referral</strong>. This creates a compounding income stream that grows with your network.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Note -->
+      <div class="text-center mt-12 reveal" style="transition-delay: 400ms;">
+        <div class="inline-flex items-center gap-3 bg-surface-50 border border-surface-200 rounded-xl px-6 py-3">
+          <i data-lucide="info" class="w-4 h-4 text-brand-500 flex-shrink-0"></i>
+          <p class="text-sm text-slate-600 font-light">With just <strong class="font-semibold">2 referrals</strong>, you've already earned back more than your net membership cost (KES 700 earned vs. KES 500 effective cost after bonus). Everything after that is pure profit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== EARNINGS BREAKDOWN ==================== -->
+  <section id="earnings" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-50 to-white pointer-events-none"></div>
+    <div class="hero-orb w-[500px] h-[500px] bg-gold-100 top-0 left-1/2 -translate-x-1/2 opacity-40"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-50 border border-gold-200 mb-5">
+          <i data-lucide="coins" class="w-3.5 h-3.5 text-gold-600"></i>
+          <span class="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.15em]">Three Ways to Earn</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">Your Complete Earning Structure</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">Transparency is at the core of ZuriAgency. There are no hidden deductions, no confusing tiers, and no surprises. Here is exactly how every shilling flows to you.</p>
+      </div>
+
+      <!-- Three Earning Cards -->
+      <div class="grid md:grid-cols-3 gap-6 mb-16">
+        <!-- Welcome Bonus -->
+        <div class="reveal" style="transition-delay: 100ms;">
+          <div class="card card-gold p-7 text-center h-full border-gold-200 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-400 to-gold-600"></div>
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mx-auto mb-5 shadow-lg">
+              <i data-lucide="gift" class="w-8 h-8 text-white"></i>
+            </div>
+            <p class="text-[11px] text-gold-600 uppercase tracking-[0.2em] font-semibold mb-2">Welcome Bonus</p>
+            <p class="text-4xl font-light text-brand-900 mb-3">KES 500</p>
+            <p class="text-sm text-slate-500 font-light leading-relaxed">Credited to your account the moment you complete your membership. This is not a discount — it's real money you can withdraw immediately, reducing your effective joining cost to just KES 500.</p>
+            <div class="mt-5 pt-5 border-t border-gold-100">
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gold-700 bg-gold-50 px-3 py-1.5 rounded-full">
+                <i data-lucide="check" class="w-3 h-3"></i> Instant Upon Joining
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direct Referral -->
+        <div class="reveal" style="transition-delay: 200ms;">
+          <div class="card p-7 text-center h-full relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-400 to-brand-600"></div>
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center mx-auto mb-5 shadow-lg">
+              <i data-lucide="user-check" class="w-8 h-8 text-white"></i>
+            </div>
+            <p class="text-[11px] text-brand-600 uppercase tracking-[0.2em] font-semibold mb-2">Direct Referral</p>
+            <p class="text-4xl font-light text-brand-900 mb-3">KES 350</p>
+            <p class="text-sm text-slate-500 font-light leading-relaxed">Earned every time someone joins ZuriAgency directly through your referral link. There is no cap on how many people you can refer — the more you share, the more you earn. This is your primary income stream.</p>
+            <div class="mt-5 pt-5 border-t border-surface-100">
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-brand-700 bg-brand-50 px-3 py-1.5 rounded-full">
+                <i data-lucide="check" class="w-3 h-3"></i> 35% Per Referral
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upline Override -->
+        <div class="reveal" style="transition-delay: 300ms;">
+          <div class="card card-gold p-7 text-center h-full border-gold-200 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-500 via-gold-400 to-gold-500"></div>
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-600 to-gold-600 flex items-center justify-center mx-auto mb-5 shadow-lg">
+              <i data-lucide="git-branch" class="w-8 h-8 text-white"></i>
+            </div>
+            <p class="text-[11px] text-gold-600 uppercase tracking-[0.2em] font-semibold mb-2">Upline Override</p>
+            <p class="text-4xl font-light text-brand-900 mb-3">KES 150</p>
+            <p class="text-sm text-slate-500 font-light leading-relaxed">When the people you personally referred go on to refer others, you earn KES 150 for each of their referrals — automatically. This is passive income that grows your earnings without any additional effort on your part.</p>
+            <div class="mt-5 pt-5 border-t border-gold-100">
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gold-700 bg-gold-50 px-3 py-1.5 rounded-full">
+                <i data-lucide="check" class="w-3 h-3"></i> 15% Passive Income
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Summary -->
+      <div class="max-w-2xl mx-auto reveal" style="transition-delay: 200ms;">
+        <div class="bg-white rounded-2xl border border-surface-200 p-6 sm:p-8 shadow-sm">
+          <h4 class="text-sm font-semibold text-brand-900 mb-5 text-center uppercase tracking-wider">Earning Example — Your First Week</h4>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between py-3 border-b border-surface-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gold-50 flex items-center justify-center"><i data-lucide="gift" class="w-4 h-4 text-gold-600"></i></div>
+                <span class="text-sm text-slate-700">Welcome Bonus (Day 1)</span>
+              </div>
+              <span class="text-sm font-semibold text-gold-600">+KES 500</span>
+            </div>
+            <div class="flex items-center justify-between py-3 border-b border-surface-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center"><i data-lucide="user-check" class="w-4 h-4 text-brand-600"></i></div>
+                <span class="text-sm text-slate-700">5 Direct Referrals (5 × KES 350)</span>
+              </div>
+              <span class="text-sm font-semibold text-brand-700">+KES 1,750</span>
+            </div>
+            <div class="flex items-center justify-between py-3 border-b border-surface-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center"><i data-lucide="git-branch" class="w-4 h-4 text-brand-500"></i></div>
+                <span class="text-sm text-slate-700">3 Upline Overrides (3 × KES 150)</span>
+              </div>
+              <span class="text-sm font-semibold text-brand-500">+KES 450</span>
+            </div>
+            <div class="flex items-center justify-between py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><i data-lucide="wallet" class="w-4 h-4 text-emerald-600"></i></div>
+                <span class="text-sm font-semibold text-brand-900">Total Week 1 Earnings</span>
+              </div>
+              <span class="text-lg font-bold gradient-text-blue">KES 2,700</span>
+            </div>
+          </div>
+          <div class="mt-5 text-center">
+            <p class="text-[12px] text-slate-400">Net profit after KES 1,000 membership: <strong class="text-emerald-600">KES 1,700</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== EARNINGS CALCULATOR ==================== -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 dot-grid-fine opacity-30 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 mb-5">
+          <i data-lucide="calculator" class="w-3.5 h-3.5 text-brand-600"></i>
+          <span class="text-[11px] font-semibold text-brand-700 uppercase tracking-[0.15em]">Interactive Tool</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">Calculate Your Monthly Potential</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">Use the slider below to see exactly what your earnings could look like based on the number of people you refer each month. Remember — these numbers only include direct referrals. Your actual income could be significantly higher with upline override commissions.</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto reveal">
+        <div class="bg-white rounded-2xl border border-surface-200 shadow-sm p-6 sm:p-8">
+          <!-- Slider -->
+          <div class="mb-8">
+            <div class="flex justify-between items-end mb-5">
+              <div>
+                <label class="text-sm text-slate-500 font-medium">Direct Referrals Per Month</label>
+                <p class="text-[11px] text-slate-400 mt-0.5">Adjust the slider to see your projected earnings</p>
+              </div>
+              <div class="text-right">
+                <span id="sliderValue" class="text-4xl font-light text-brand-800">10</span>
+                <p class="text-[11px] text-slate-400">people</p>
+              </div>
+            </div>
+            <input type="range" id="referralSlider" min="1" max="100" value="10" class="w-full cursor-pointer" style="background: linear-gradient(90deg, #2563EB 9.09%, #E2E8F0 9.09%);" />
+            <div class="flex justify-between mt-2.5 px-0.5">
+              <span class="text-[10px] text-slate-400 font-medium">1</span>
+              <span class="text-[10px] text-slate-400 font-medium">25</span>
+              <span class="text-[10px] text-slate-400 font-medium">50</span>
+              <span class="text-[10px] text-slate-400 font-medium">75</span>
+              <span class="text-[10px] text-slate-400 font-medium">100</span>
+            </div>
+          </div>
+
+          <!-- Earnings Cards -->
+          <div class="grid sm:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gold-50 border border-gold-100 rounded-xl p-4">
+              <p class="text-[10px] text-gold-700 uppercase tracking-wider font-semibold mb-1">Welcome Bonus</p>
+              <p class="text-2xl font-light text-brand-900">KES 500</p>
+              <p class="text-[11px] text-slate-400 mt-1">One-time</p>
+            </div>
+            <div class="bg-brand-50 border border-brand-100 rounded-xl p-4">
+              <p class="text-[10px] text-brand-700 uppercase tracking-wider font-semibold mb-1">Direct Earnings</p>
+              <p id="directEarnings" class="text-2xl font-light text-brand-900">KES 3,500</p>
+              <p id="directCalc" class="text-[11px] text-slate-400 mt-1">10 × KES 350</p>
+            </div>
+            <div class="bg-surface-50 border border-surface-200 rounded-xl p-4">
+              <p class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-1">Upline Potential</p>
+              <p id="uplineEarnings" class="text-2xl font-light text-brand-900">KES 1,500</p>
+              <p id="uplineCalc" class="text-[11px] text-slate-400 mt-1">10 × KES 150</p>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="bg-gradient-to-r from-brand-800 to-brand-900 rounded-xl p-6 text-center">
+            <p class="text-[11px] text-brand-200 uppercase tracking-wider font-medium mb-1">Estimated Monthly Earnings (Direct + Upline + Bonus)</p>
+            <p id="totalEarnings" class="text-4xl sm:text-5xl font-light text-white">KES 5,500</p>
+            <p class="text-[12px] text-brand-300 mt-2">This could be <strong class="text-gold-300">KES 66,000+ per year</strong> from part-time effort</p>
+          </div>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="mt-6 bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden reveal" style="transition-delay: 200ms;">
+          <div class="px-6 py-4 border-b border-surface-100 bg-surface-50">
+            <p class="text-sm font-semibold text-brand-900">Quick Reference Table — Direct Earnings Only</p>
+          </div>
+          <div class="divide-y divide-surface-100">
+            <div class="grid grid-cols-3 px-6 py-3.5 feature-item">
+              <span class="text-sm text-slate-500">1 referral</span>
+              <span class="text-sm text-slate-500 text-center">/month</span>
+              <span class="text-sm text-brand-800 text-right font-semibold">KES 350</span>
+            </div>
+            <div class="grid grid-cols-3 px-6 py-3.5 feature-item">
+              <span class="text-sm text-slate-500">5 referrals</span>
+              <span class="text-sm text-slate-500 text-center">/month</span>
+              <span class="text-sm text-brand-800 text-right font-semibold">KES 1,750</span>
+            </div>
+            <div class="grid grid-cols-3 px-6 py-3.5 feature-item">
+              <span class="text-sm text-slate-500">10 referrals</span>
+              <span class="text-sm text-slate-500 text-center">/month</span>
+              <span class="text-sm text-brand-800 text-right font-semibold">KES 3,500</span>
+            </div>
+            <div class="grid grid-cols-3 px-6 py-3.5 feature-item">
+              <span class="text-sm text-slate-500">20 referrals</span>
+              <span class="text-sm text-slate-500 text-center">/month</span>
+              <span class="text-sm text-brand-800 text-right font-semibold">KES 7,000</span>
+            </div>
+            <div class="grid grid-cols-3 px-6 py-3.5 feature-item bg-gold-50/50">
+              <span class="text-sm text-slate-500 font-medium">50 referrals</span>
+              <span class="text-sm text-slate-500 text-center font-medium">/month</span>
+              <span class="text-sm text-gold-700 text-right font-bold">KES 17,500</span>
+            </div>
+          </div>
+          <div class="px-6 py-3 bg-surface-50 border-t border-surface-100">
+            <p class="text-[11px] text-slate-400 text-center">Add upline overrides on top for even higher earnings</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== TESTIMONIALS ==================== -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-white to-surface-50 pointer-events-none"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-brand-100 top-20 -left-40 opacity-40"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 mb-5">
+          <i data-lucide="message-circle" class="w-3.5 h-3.5 text-brand-600"></i>
+          <span class="text-[11px] font-semibold text-brand-700 uppercase tracking-[0.15em]">Real Results</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">What Our Members Are Saying</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">These are real people from real towns across Kenya who decided to turn their network into an income stream. Their stories could be your story next.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Testimonial 1 -->
+        <div class="reveal" style="transition-delay: 100ms;">
+          <div class="card p-6 h-full flex flex-col">
+            <div class="flex gap-1 mb-4">
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+            </div>
+            <p class="text-sm text-slate-600 font-light leading-[1.8] mb-6 flex-1">"I joined ZuriAgency with a bit of skepticism — most online opportunities in Kenya feel sketchy. But I got my KES 500 bonus immediately, which gave me confidence. I referred 10 friends in my first week using my WhatsApp status and made KES 3,500 in direct commissions alone. By the end of the month, with upline earnings from my team, I had crossed KES 8,000. This is genuinely life-changing for a student like me."</p>
+            <div class="flex items-center gap-3 pt-5 border-t border-surface-100">
+              <img src="https://picsum.photos/seed/sarah-nbi/48/48.jpg" class="w-11 h-11 rounded-full object-cover border-2 border-surface-200" alt="Sarah M." />
+              <div>
+                <p class="text-sm font-semibold text-brand-900">Sarah M.</p>
+                <p class="text-[11px] text-slate-400">University Student • Nairobi</p>
+              </div>
+              <div class="ml-auto">
+                <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="reveal" style="transition-delay: 200ms;">
+          <div class="card card-gold p-6 h-full flex flex-col border-gold-200">
+            <div class="flex gap-1 mb-4">
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+            </div>
+            <p class="text-sm text-slate-600 font-light leading-[1.8] mb-6 flex-1">"I've been in network marketing for years and nothing has been this straightforward. No products to explain, no monthly targets to hit. I built a team of 50 active members in my first two months. My team now brings in about 200 new members monthly, and my upline override earnings alone are KES 30,000 per month. Add my direct referrals on top of that, and I've comfortably replaced my salary. ZuriAgency is the real deal."</p>
+            <div class="flex items-center gap-3 pt-5 border-t border-gold-100">
+              <img src="https://picsum.photos/seed/james-msa/48/48.jpg" class="w-11 h-11 rounded-full object-cover border-2 border-gold-200" alt="James K." />
+              <div>
+                <p class="text-sm font-semibold text-brand-900">James K.</p>
+                <p class="text-[11px] text-slate-400">Business Owner • Mombasa</p>
+              </div>
+              <div class="ml-auto">
+                <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="reveal" style="transition-delay: 300ms;">
+          <div class="card p-6 h-full flex flex-col">
+            <div class="flex gap-1 mb-4">
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+              <i data-lucide="star" class="w-4 h-4 text-gold-400 fill-gold-400"></i>
+            </div>
+            <p class="text-sm text-slate-600 font-light leading-[1.8] mb-6 flex-1">"I was very skeptical at first — I've been burned before by online schemes. But the KES 500 welcome bonus showed me they were serious. I made my full membership back plus profit with just 3 referrals. That's when I went all in. Now I do this part-time, about 30 minutes a day sharing my link, and I'm earning what most people consider a full-time income. My only regret is not starting sooner."</p>
+            <div class="flex items-center gap-3 pt-5 border-t border-surface-100">
+              <img src="https://picsum.photos/seed/grace-ksm/48/48.jpg" class="w-11 h-11 rounded-full object-cover border-2 border-surface-200" alt="Grace W." />
+              <div>
+                <p class="text-sm font-semibold text-brand-900">Grace W.</p>
+                <p class="text-[11px] text-slate-400">Part-time • Kisumu</p>
+              </div>
+              <div class="ml-auto">
+                <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== WHY JOIN ==================== -->
+  <section id="why" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 hex-pattern opacity-20 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 mb-5">
+          <i data-lucide="trophy" class="w-3.5 h-3.5 text-brand-600"></i>
+          <span class="text-[11px] font-semibold text-brand-700 uppercase tracking-[0.15em]">The ZuriAgency Advantage</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">Why Thousands of Kenyans Choose ZuriAgency</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">We designed ZuriAgency to remove every barrier that typically prevents people from earning online. No skills needed. No capital beyond the one-time fee. No time commitment beyond what you choose to give. Here's what sets us apart.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Feature 1 -->
+        <div class="card p-6 reveal" style="transition-delay: 50ms;">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+            <i data-lucide="package-x" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">No Products to Sell</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">Unlike traditional network marketing, you never handle products, inventory, or deliveries. Your only job is sharing a link — the platform does everything else.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="card p-6 reveal" style="transition-delay: 100ms;">
+          <div class="w-11 h-11 rounded-xl bg-gold-50 border border-gold-100 flex items-center justify-center mb-4">
+            <i data-lucide="zap" class="w-5 h-5 text-gold-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Instant M-Pesa Payments</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">No waiting for end-of-month payouts. The moment someone joins through your link, your commission is sent directly to your M-Pesa. Real money, in real time.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="card p-6 reveal" style="transition-delay: 150ms;">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+            <i data-lucide="link" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">One Link Does Everything</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">Your personalized referral link tracks everything automatically. Share it on WhatsApp, Facebook, Instagram, or anywhere — it works seamlessly across all platforms.</p>
+        </div>
+        <!-- Feature 4 -->
+        <div class="card p-6 reveal" style="transition-delay: 200ms;">
+          <div class="w-11 h-11 rounded-xl bg-gold-50 border border-gold-100 flex items-center justify-center mb-4">
+            <i data-lucide="git-branch" class="w-5 h-5 text-gold-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Earn From Your Team's Efforts</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">The upline override system means you earn KES 150 every time someone you referred brings in a new member. Build a team once, earn from it indefinitely.</p>
+        </div>
+        <!-- Feature 5 -->
+        <div class="card p-6 reveal" style="transition-delay: 250ms;">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+            <i data-lucide="coins" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Only KES 500 Net Cost to Start</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">Your KES 1,000 membership comes with a KES 500 welcome bonus, meaning your actual out-of-pocket cost is only KES 500. Recover it with just 2 referrals.</p>
+        </div>
+        <!-- Feature 6 -->
+        <div class="card p-6 reveal" style="transition-delay: 300ms;">
+          <div class="w-11 h-11 rounded-xl bg-gold-50 border border-gold-100 flex items-center justify-center mb-4">
+            <i data-lucide="calendar-x" class="w-5 h-5 text-gold-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Zero Recurring Fees</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">One payment. That's it. No monthly subscriptions, no annual renewals, no hidden charges that eat into your earnings. What you earn is truly yours.</p>
+        </div>
+        <!-- Feature 7 -->
+        <div class="card p-6 reveal" style="transition-delay: 350ms;">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+            <i data-lucide="flag" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Built for Kenyans, by Kenyans</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">Every aspect of ZuriAgency is tailored to the Kenyan market — from M-Pesa integration to local support. We understand your needs because we share them.</p>
+        </div>
+        <!-- Feature 8 -->
+        <div class="card p-6 reveal" style="transition-delay: 400ms;">
+          <div class="w-11 h-11 rounded-xl bg-gold-50 border border-gold-100 flex items-center justify-center mb-4">
+            <i data-lucide="headphones" class="w-5 h-5 text-gold-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Dedicated Support Team</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">Questions? Issues? Our Kenyan-based support team is available to help you succeed. We're invested in your success because your success is our success.</p>
+        </div>
+        <!-- Feature 9 -->
+        <div class="card p-6 reveal" style="transition-delay: 450ms;">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+            <i data-lucide="smartphone" class="w-5 h-5 text-brand-600"></i>
+          </div>
+          <h3 class="text-base font-semibold text-brand-900 mb-2">Works on Any Device</h3>
+          <p class="text-sm text-slate-500 font-light leading-relaxed">No app to download. Access your dashboard, share your link, and track your earnings from any phone or computer with a browser. Simple and accessible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== FAQ ==================== -->
+  <section id="faq" class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-50 to-white pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 mb-5">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 text-brand-600"></i>
+          <span class="text-[11px] font-semibold text-brand-700 uppercase tracking-[0.15em]">Transparency First</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-light tracking-tight text-brand-900 mb-4">Frequently Asked Questions</h2>
+        <p class="text-slate-500 font-light max-w-2xl mx-auto leading-relaxed">We believe you should have every question answered before making any decision. If you don't find what you're looking for here, our support team is just a message away.</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-3">
+        <!-- FAQ 1 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 50ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">How much does it cost to join ZuriAgency?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">The membership fee is a one-time payment of KES 1,000 via M-Pesa. However, you receive a KES 500 welcome bonus immediately upon joining, which means your effective out-of-pocket cost is only KES 500. There are no additional fees, no monthly charges, and no hidden costs — ever.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 100ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">How exactly do I earn money on this platform?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">You earn through three channels. First, you receive a KES 500 welcome bonus the moment you join. Second, you earn KES 350 every time someone joins ZuriAgency directly through your unique referral link — there is no limit to how many people you can refer. Third, you earn KES 150 (upline override) each time someone you referred goes on to refer another person. This third stream is completely passive — you earn it without doing anything additional.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 150ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">Do I need to sell any products?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">Absolutely not. ZuriAgency is a pure referral platform. There are no products to buy, sell, stock, or deliver. You do not handle any physical goods. Your only activity is sharing your referral link with people who might be interested in the opportunity. The platform handles all the rest — registration, payment processing, and commission distribution.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 200ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">How and when do I receive my payments?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">Payments are processed instantly. The moment someone completes their membership through your referral link, your KES 350 commission is sent directly to the M-Pesa number you registered with. Similarly, upline override commissions of KES 150 are sent to your M-Pesa automatically. There are no waiting periods, no minimum withdrawal thresholds, and no processing delays.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 250ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">Is ZuriAgency a pyramid scheme?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">No. ZuriAgency is a referral-based income platform with a transparent, two-level commission structure. Pyramid schemes typically involve no real value exchange and rely solely on recruitment chains with many levels. ZuriAgency has only two earning tiers (direct referral and one level of upline override), provides immediate value through the KES 500 welcome bonus, and offers a clear, honest structure. We encourage you to compare and see the difference for yourself.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 300ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">Can I join from anywhere in Kenya?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">Yes. ZuriAgency is open to anyone in Kenya with a valid M-Pesa number and internet access. Whether you're in Nairobi, Mombasa, Kisumu, Nakuru, Eldoret, or any other town or county — you can join, refer, and earn from anywhere. Our platform is fully mobile-optimized, so you don't even need a computer.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 7 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 350ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">What happens if I stop referring people?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">If you stop referring, your direct referral earnings stop since those are based on your personal activity. However, your upline override commissions continue to come in as long as the people you previously referred keep bringing in new members. This is one of the most powerful aspects of ZuriAgency — the work you do today can continue paying you well into the future.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 8 -->
+        <div class="faq-item bg-white rounded-xl border border-surface-200 overflow-hidden reveal" style="transition-delay: 400ms;">
+          <button class="faq-toggle w-full flex items-center justify-between px-6 py-5 text-left hover:bg-surface-50 transition-colors">
+            <span class="text-sm font-semibold text-brand-900 pr-4">Is there a limit on how much I can earn?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-300 faq-icon"></i>
+          </button>
+          <div class="faq-answer px-6 pb-5">
+            <p class="text-sm text-slate-500 font-light leading-relaxed">There is no cap on your earnings. You can refer as many people as you want, and each direct referral earns you KES 350. Similarly, there is no limit on upline override commissions — if your 50 referrals each bring in 10 people, that's 500 secondary referrals earning you KES 75,000 in passive income. Your earning potential is entirely in your hands.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== FINAL CTA ==================== -->
+  <section id="join" class="py-24 relative overflow-hidden">
+    <div class="hero-orb w-[600px] h-[600px] bg-brand-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-gold-100 top-1/4 right-0 opacity-40"></div>
+    <div class="absolute inset-0 dot-grid opacity-30 pointer-events-none"></div>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+      <div class="reveal">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-50 border border-gold-200 mb-6">
+          <i data-lucide="rocket" class="w-3.5 h-3.5 text-gold-600"></i>
+          <span class="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.15em]">Start Today</span>
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extralight tracking-tight text-brand-900 mb-5 leading-[1.15]">
+          Your Network Is Already Worth
+          <span class="gradient-text-blue font-light">Thousands of Shillings</span>
+          <span class="gradient-text-gold font-light"> Every Month</span>
+        </h2>
+
+        <p class="text-slate-500 font-light text-lg leading-relaxed mb-4 max-w-xl mx-auto">
+          The only thing standing between you and a growing referral income is taking the first step. Join today with KES 1,000, receive KES 500 instantly, and start earning within minutes.
+        </p>
+
+        <p class="text-slate-400 text-sm font-light mb-10 max-w-lg mx-auto">
+          Over 5,000 Kenyans have already started. The earlier you join, the more people in your network are still available to refer. Don't let someone else earn the commissions that could be yours.
+        </p>
+
+        <!-- CTA -->
+        <a href="#" class="cta-gold text-white text-base font-semibold px-10 py-4.5 rounded-xl inline-flex items-center gap-3 mb-6 shadow-lg" style="padding-top: 18px; padding-bottom: 18px;">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+          Join Now — KES 1,000 & Get KES 500 Free
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+
+        <p class="text-[12px] text-slate-400 mb-10">No monthly fees. No hidden charges. Cancel anytime. Instant M-Pesa bonus.</p>
+
+        <!-- Trust Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
+          <div class="bg-white rounded-xl border border-surface-200 p-4 text-center hover:border-brand-200 hover:shadow-sm transition-all">
+            <i data-lucide="shield-check" class="w-6 h-6 text-brand-600 mx-auto mb-2"></i>
+            <p class="text-[11px] text-slate-600 font-medium leading-tight">Trusted by 5,000+ Kenyans</p>
+          </div>
+          <div class="bg-white rounded-xl border border-surface-200 p-4 text-center hover:border-gold-200 hover:shadow-sm transition-all">
+            <i data-lucide="smartphone" class="w-6 h-6 text-gold-600 mx-auto mb-2"></i>
+            <p class="text-[11px] text-slate-600 font-medium leading-tight">Instant M-Pesa Payouts</p>
+          </div>
+          <div class="bg-white rounded-xl border border-surface-200 p-4 text-center hover:border-brand-200 hover:shadow-sm transition-all">
+            <i data-lucide="headphones" class="w-6 h-6 text-brand-600 mx-auto mb-2"></i>
+            <p class="text-[11px] text-slate-600 font-medium leading-tight">24/7 Customer Support</p>
+          </div>
+          <div class="bg-white rounded-xl border border-surface-200 p-4 text-center hover:border-gold-200 hover:shadow-sm transition-all">
+            <i data-lucide="eye-off" class="w-6 h-6 text-gold-600 mx-auto mb-2"></i>
+            <p class="text-[11px] text-slate-600 font-medium leading-tight">No Hidden Fees Ever</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-surface-200 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <!-- Brand -->
+        <div class="md:col-span-2">
+          <a href="#" class="flex items-center gap-2.5 mb-4">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 flex items-center justify-center shadow-md">
+              <span class="text-white font-bold text-xs">Z</span>
+            </div>
+            <span class="text-brand-900 font-semibold text-sm tracking-tight">ZuriAgency<span class="text-brand-600">.co.ke</span></span>
+          </a>
+          <p class="text-sm text-slate-500 font-light leading-relaxed mb-4 max-w-sm">Your Network, Your Income. Kenya's most transparent referral income platform. Join thousands of Kenyans turning their connections into real, measurable earnings.</p>
+          <div class="flex items-center gap-2">
+            <div class="h-1 w-8 rounded-full bg-brand-600"></div>
+            <div class="h-1 w-8 rounded-full bg-gold-500"></div>
+            <div class="h-1 w-8 rounded-full bg-brand-300"></div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div>
+          <h4 class="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.15em] mb-5">Quick Links</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">Home</a></li>
+            <li><a href="#how" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">How It Works</a></li>
+            <li><a href="#earnings" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">Earnings Structure</a></li>
+            <li><a href="#why" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">Why ZuriAgency</a></li>
+            <li><a href="#faq" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div>
+          <h4 class="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.15em] mb-5">Get in Touch</h4>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+              <a href="mailto:info@zuriagency.co.ke" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">info@zuriagency.co.ke</a>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+              <a href="tel:+254700000000" class="text-sm text-slate-500 hover:text-brand-700 transition-colors duration-150 font-light">+254 700 000 000</a>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i>
+              <span class="text-sm text-slate-500 font-light">Nairobi, Kenya</span>
+            </li>
+          </ul>
+          <div class="flex gap-3 mt-5">
+            <a href="#" class="w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-brand-50 hover:border-brand-200 transition-colors">
+              <i data-lucide="facebook" class="w-4 h-4 text-slate-500"></i>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-brand-50 hover:border-brand-200 transition-colors">
+              <i data-lucide="twitter" class="w-4 h-4 text-slate-500"></i>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-brand-50 hover:border-brand-200 transition-colors">
+              <i data-lucide="instagram" class="w-4 h-4 text-slate-500"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-8 border-t border-surface-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-slate-400 font-light">&copy; 2025 ZuriAgency.co.ke. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="text-xs text-slate-400 hover:text-slate-600 transition-colors duration-150 font-light">Privacy Policy</a>
+          <a href="#" class="text-xs text-slate-400 hover:text-slate-600 transition-colors duration-150 font-light">Terms of Service</a>
+          <a href="#" class="text-xs text-slate-400 hover:text-slate-600 transition-colors duration-150 font-light">Refund Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script>
+    lucide.createIcons();
+
+    // Scroll Reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('reveal-visible');
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Mobile Menu
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    mobileToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // Calculator
+    const slider = document.getElementById('referralSlider');
+    const sliderValue = document.getElementById('sliderValue');
+    const directEarnings = document.getElementById('directEarnings');
+    const uplineEarnings = document.getElementById('uplineEarnings');
+    const directCalc = document.getElementById('directCalc');
+    const uplineCalc = document.getElementById('uplineCalc');
+    const totalEarnings = document.getElementById('totalEarnings');
+
+    function formatKES(n) { return 'KES ' + n.toLocaleString(); }
+
+    function updateCalc() {
+      const v = parseInt(slider.value);
+      const d = v * 350;
+      const u = v * 150;
+      const t = 500 + d + u;
+      sliderValue.textContent = v;
+      directEarnings.textContent = formatKES(d);
+      uplineEarnings.textContent = formatKES(u);
+      directCalc.textContent = v + ' × KES 350';
+      uplineCalc.textContent = v + ' × KES 150';
+      totalEarnings.textContent = formatKES(t);
+      const pct = ((v - 1) / 99) * 100;
+      slider.style.background = `linear-gradient(90deg, #2563EB ${pct}%, #E2E8F0 ${pct}%)`;
+    }
+    slider.addEventListener('input', updateCalc);
+    updateCalc();
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+        const isOpen = answer.classList.contains('open');
+        document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+        document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+        if (!isOpen) {
+          answer.classList.add('open');
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

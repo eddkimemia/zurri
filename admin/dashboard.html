@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — ZuriAgency.co.ke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#0F2B5B' },
+            gold: { 50:'#FFFBEB',100:'#FEF3C7',200:'#FDE68A',300:'#FCD34D',400:'#FBBF24',500:'#D4A843',600:'#C9952B',700:'#B45309' },
+            surface: { 0:'#FFFFFF',50:'#F8FAFC',100:'#F1F5F9',200:'#E2E8F0',300:'#CBD5E1' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#F1F5F9;color:#0F172A;overflow-x:hidden}
+    @keyframes globalFadeIn{0%{opacity:0}100%{opacity:1}}body{animation:globalFadeIn .5s ease-out forwards}
+    .gradient-text-blue{background:linear-gradient(135deg,#1E40AF,#2563EB,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .gradient-text-gold{background:linear-gradient(135deg,#C9952B,#D4A843,#FBBF24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .sidebar{width:260px;min-height:100vh;background:#0F172A;border-right:1px solid rgba(255,255,255,.06);transition:transform .3s cubic-bezier(.25,.46,.45,.94);z-index:40}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:35}
+    .sidebar-overlay.active{display:block}
+
+    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);transition:all .15s ease;cursor:pointer;margin:2px 12px}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+    .nav-item.active{background:rgba(37,99,235,.2);color:#60A5FA;font-weight:600;border:1px solid rgba(37,99,235,.2)}
+
+    .stat-card{position:relative;overflow:hidden}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.blue::before{background:linear-gradient(90deg,#2563EB,#60A5FA)}
+    .stat-card.gold::before{background:linear-gradient(90deg,#C9952B,#FBBF24)}
+    .stat-card.green::before{background:linear-gradient(90deg,#10B981,#34D399)}
+    .stat-card.red::before{background:linear-gradient(90deg,#EF4444,#F87171)}
+    .stat-card.purple::before{background:linear-gradient(90deg,#7C3AED,#A78BFA)}
+
+    .dash-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;transition:all .3s ease}
+    .dash-card:hover{border-color:#BFDBFE;box-shadow:0 4px 16px rgba(37,99,235,.05)}
+
+    .cta-primary{background:linear-gradient(135deg,#1E40AF,#2563EB);box-shadow:0 4px 16px rgba(37,99,235,.25);transition:all .3s ease}
+    .cta-primary:hover{box-shadow:0 6px 24px rgba(37,99,235,.35);transform:translateY(-1px)}
+    .cta-green{background:linear-gradient(135deg,#059669,#10B981);box-shadow:0 4px 16px rgba(16,185,129,.25);transition:all .3s ease}
+    .cta-green:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+    .cta-red{background:linear-gradient(135deg,#DC2626,#EF4444);box-shadow:0 4px 16px rgba(239,68,68,.25);transition:all .3s ease}
+    .cta-red:hover{box-shadow:0 6px 24px rgba(239,68,68,.35);transform:translateY(-1px)}
+    .cta-outline{border:1.5px solid #E2E8F0;color:#64748B;transition:all .2s ease}
+    .cta-outline:hover{border-color:#BFDBFE;color:#2563EB;background:#F8FAFC}
+
+    .form-input{width:100%;padding:9px 14px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;color:#0F172A;background:#fff;transition:all .2s ease;outline:none}
+    .form-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+    .form-input::placeholder{color:#94A3B8;font-weight:300}
+    .form-select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+
+    .page-panel{display:none}
+    .page-panel.active{display:block;animation:pageFadeIn .3s ease-out}
+    @keyframes pageFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+    .tx-row{transition:background .15s ease}
+    .tx-row:hover{background:#F8FAFC}
+
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+
+    .toast{position:fixed;bottom:24px;right:24px;background:#0F172A;color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:500;opacity:0;transform:translateY(10px);transition:all .3s ease;z-index:100;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+    .toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+
+    @keyframes barGrow{from{width:0}to{width:var(--w)}}
+    .bar-animate{animation:barGrow .8s ease-out forwards}
+
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+    .modal-overlay.active{display:flex}
+    .modal-content{background:#fff;border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:scaleIn .25s ease-out}
+    @keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+    .toggle-track{width:40px;height:22px;border-radius:999px;background:#CBD5E1;transition:background .2s;cursor:pointer;position:relative}
+    .toggle-track.active{background:#2563EB}
+    .toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .toggle-track.active .toggle-thumb{transform:translateX(18px)}
+
+    @media(max-width:1023px){
+      .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0)}
+    }
+  </style>
+</head>
+<body class="font-inter antialiased">
+
+<!-- Toast -->
+<div id="toast" class="toast"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i><span id="toastText"></span></div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-content" id="modalContent"></div>
+</div>
+
+<!-- Sidebar Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- ==================== SIDEBAR (Dark) ==================== -->
+<aside id="sidebar" class="sidebar fixed top-0 left-0 flex flex-col">
+  <div class="p-5 border-b border-white/5">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg">
+        <span class="text-white font-bold text-[10px]">Z</span>
+      </div>
+      <div>
+        <span class="text-white font-semibold text-sm block leading-tight">ZuriAgency</span>
+        <span class="text-[10px] text-brand-300 font-medium">Admin Panel</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="flex-1 py-4 overflow-y-auto">
+    <p class="text-[10px] font-semibold text-white/20 uppercase tracking-[0.15em] px-7 mb-2">Analytics</p>
+    <div class="nav-item active" data-page="overview" onclick="switchPage('overview')">
+      <i data-lucide="layout-dashboard" class="w-[18px] h-[18px]"></i>Dashboard
+    </div>
+    <div class="nav-item" data-page="analytics" onclick="switchPage('analytics')">
+      <i data-lucide="bar-chart-3" class="w-[18px] h-[18px]"></i>Analytics
+    </div>
+
+    <p class="text-[10px] font-semibold text-white/20 uppercase tracking-[0.15em] px-7 mb-2 mt-6">Management</p>
+    <div class="nav-item" data-page="users" onclick="switchPage('users')">
+      <i data-lucide="users" class="w-[18px] h-[18px]"></i>Users
+      <span class="ml-auto text-[10px] bg-brand-500/20 text-brand-300 px-2 py-0.5 rounded-full font-semibold">5,024</span>
+    </div>
+    <div class="nav-item" data-page="withdrawals" onclick="switchPage('withdrawals')">
+      <i data-lucide="wallet" class="w-[18px] h-[18px]"></i>Withdrawals
+      <span class="ml-auto text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-semibold">7</span>
+    </div>
+    <div class="nav-item" data-page="transactions" onclick="switchPage('transactions')">
+      <i data-lucide="receipt" class="w-[18px] h-[18px]"></i>Transactions
+    </div>
+    <div class="nav-item" data-page="referrals" onclick="switchPage('referrals')">
+      <i data-lucide="git-branch" class="w-[18px] h-[18px]"></i>Referral Network
+    </div>
+
+    <p class="text-[10px] font-semibold text-white/20 uppercase tracking-[0.15em] px-7 mb-2 mt-6">System</p>
+    <div class="nav-item" data-page="settings" onclick="switchPage('settings')">
+      <i data-lucide="settings" class="w-[18px] h-[18px]"></i>Settings
+    </div>
+    <div class="nav-item" onclick="window.location.href='dashboard.html'">
+      <i data-lucide="external-link" class="w-[18px] h-[18px]"></i>View User Dashboard
+    </div>
+  </nav>
+
+  <div class="p-4 border-t border-white/5">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">AD</div>
+      <div class="min-w-0">
+        <p class="text-[12px] font-semibold text-white truncate">Admin User</p>
+        <p class="text-[10px] text-white/30 truncate">superadmin@zuriagency.co.ke</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="lg:ml-[260px] min-h-screen">
+  <!-- Top Bar -->
+  <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-surface-200">
+    <div class="flex items-center justify-between px-4 sm:px-6 h-16">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()" class="lg:hidden w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-surface-100 transition-colors">
+          <i data-lucide="menu" class="w-4 h-4 text-slate-600"></i>
+        </button>
+        <h1 id="pageTitle" class="text-base font-semibold text-brand-900">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 bg-surface-50 border border-surface-200 rounded-lg px-3 py-1.5">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400"></i>
+          <input type="text" placeholder="Search users, transactions..." class="bg-transparent text-[12px] outline-none w-40 placeholder:text-slate-400" />
+        </div>
+        <button class="relative w-9 h-9 rounded-lg bg-surface-50 border border-surface-200 flex items-center justify-center hover:bg-surface-100 transition-colors">
+          <i data-lucide="bell" class="w-4 h-4 text-slate-500"></i>
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] text-white font-bold flex items-center justify-center">7</span>
+        </button>
+        <button onclick="window.location.href='auth.html'" class="w-9 h-9 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
+          <i data-lucide="log-out" class="w-4 h-4 text-slate-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="p-4 sm:p-6">
+
+    <!-- ==================== OVERVIEW ==================== -->
+    <div id="page-overview" class="page-panel active">
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+        <div class="stat-card blue bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Total Users</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">5,024</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">+127 this week</p>
+        </div>
+        <div class="stat-card green bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Total Revenue</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 5.02M</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">+KES 127K this week</p>
+        </div>
+        <div class="stat-card gold bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Total Paid Out</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 2.51M</p>
+          <p class="text-[10px] text-slate-400 mt-1">50.0% of revenue</p>
+        </div>
+        <div class="stat-card red bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Pending Withdrawals</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 48.5K</p>
+          <p class="text-[10px] text-amber-500 font-medium mt-1">7 requests</p>
+        </div>
+        <div class="stat-card purple bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Platform Profit</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 2.51M</p>
+          <p class="text-[10px] text-slate-400 mt-1">After all payouts</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Revenue Chart -->
+        <div class="lg:col-span-2 dash-card p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-semibold text-brand-900">Revenue vs Payouts (6 Months)</h3>
+          </div>
+          <div class="flex items-end gap-3 h-48">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-300 rounded-t bar-animate" style="--w:100%;height:50%"></div>
+                <div class="bg-brand-400 bar-animate" style="--w:100%;height:100%;animation-delay:.05s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Oct</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-300 rounded-t bar-animate" style="--w:100%;height:48%"></div>
+                <div class="bg-brand-400 bar-animate" style="--w:100%;height:125%;animation-delay:.1s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Nov</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-300 rounded-t bar-animate" style="--w:100%;height:46%"></div>
+                <div class="bg-brand-400 bar-animate" style="--w:100%;height:175%;animation-delay:.15s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Dec</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-300 rounded-t bar-animate" style="--w:100%;height:49%"></div>
+                <div class="bg-brand-500 bar-animate" style="--w:100%;height:230%;animation-delay:.2s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Jan</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-300 rounded-t bar-animate" style="--w:100%;height:50%"></div>
+                <div class="bg-brand-500 bar-animate" style="--w:100%;height:290%;animation-delay:.25s"></div>
+              </div>
+              <span class="text-[10px] text-slate-400">Feb</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full flex gap-1 rounded-t-lg" style="height:100%;display:flex;flex-direction:column-reverse">
+                <div class="bg-gold-400 rounded-t bar-animate" style="--w:100%;height:51%"></div>
+                <div class="bg-brand-600 rounded-t bar-animate" style="--w:100%;height:340%;animation-delay:.3s"></div>
+              </div>
+              <span class="text-[10px] text-brand-600 font-semibold">Mar</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-5 mt-4 pt-4 border-t border-surface-100">
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-brand-500"></div><span class="text-[11px] text-slate-500">Revenue (KES 1,000 × joins)</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-gold-400"></div><span class="text-[11px] text-slate-500">Paid Out (350 + 150 per join)</span></div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+          <!-- Pending Withdrawals Alert -->
+          <div class="dash-card p-5 border-amber-200">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-brand-900">Pending Withdrawals</h3>
+              <button onclick="switchPage('withdrawals')" class="text-[11px] text-brand-600 font-medium hover:underline">View All</button>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i></div><div><p class="text-[12px] font-medium text-brand-900">John Kamau</p><p class="text-[10px] text-slate-400">2 min ago</p></div></div>
+                <span class="text-[12px] font-bold text-brand-900">KES 8,500</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i></div><div><p class="text-[12px] font-medium text-brand-900">Mary Ochieng</p><p class="text-[10px] text-slate-400">15 min ago</p></div></div>
+                <span class="text-[12px] font-bold text-brand-900">KES 5,000</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i></div><div><p class="text-[12px] font-medium text-brand-900">Peter Mwangi</p><p class="text-[10px] text-slate-400">1 hour ago</p></div></div>
+                <span class="text-[12px] font-bold text-brand-900">KES 12,000</span>
+              </div>
+            </div>
+            <button onclick="switchPage('withdrawals')" class="cta-primary w-full text-white text-[12px] font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 mt-4">
+              <i data-lucide="check-square" class="w-3.5 h-3.5"></i>Process Withdrawals
+            </button>
+          </div>
+
+          <!-- Recent Signups -->
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Recent Signups</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[9px] font-bold flex-shrink-0">MO</div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Mary Ochieng</p><p class="text-[10px] text-slate-400">Kisumu • 2 min ago</p></div>
+                <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[9px] font-bold flex-shrink-0">PM</div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Peter Mwangi</p><p class="text-[10px] text-slate-400">Nakuru • 18 min ago</p></div>
+                <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[9px] font-bold flex-shrink-0">FW</div>
+                <div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Faith Wanjiku</p><p class="text-[10px] text-slate-400">Mombasa • 45 min ago</p></div>
+                <span class="badge bg-amber-50 text-amber-700 border border-amber-100">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== ANALYTICS ==================== -->
+    <div id="page-analytics" class="page-panel">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Avg. Referrals/User</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">3.2</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">+0.4 vs last month</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Conversion Rate</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">68%</p>
+          <p class="text-[10px] text-emerald-500 font-medium mt-1">Of pending → active</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Avg. Withdrawal</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">KES 4,200</p>
+          <p class="text-[10px] text-slate-400 mt-1">Per transaction</p>
+        </div>
+        <div class="bg-white rounded-xl border border-surface-200 p-4">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Top County</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">Nairobi</p>
+          <p class="text-[10px] text-slate-400 mt-1">42% of all users</p>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Top Counties -->
+        <div class="dash-card p-5">
+          <h3 class="text-sm font-semibold text-brand-900 mb-5">Users by County</h3>
+          <div class="space-y-3">
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-600">Nairobi</span><span class="text-[12px] font-semibold text-brand-900">2,110 (42%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-brand-500 rounded-full bar-animate" style="--w:100%;width:42%"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-600">Mombasa</span><span class="text-[12px] font-semibold text-brand-900">753 (15%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-brand-400 rounded-full bar-animate" style="--w:100%;width:15%;animation-delay:.1s"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-600">Kisumu</span><span class="text-[12px] font-semibold text-brand-900">552 (11%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-brand-300 rounded-full bar-animate" style="--w:100%;width:11%;animation-delay:.2s"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-600">Nakuru</span><span class="text-[12px] font-semibold text-brand-900">402 (8%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-gold-400 rounded-full bar-animate" style="--w:100%;width:8%;animation-delay:.3s"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-600">Uasin Gishu</span><span class="text-[12px] font-semibold text-brand-900">301 (6%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-gold-300 rounded-full bar-animate" style="--w:100%;width:6%;animation-delay:.4s"></div></div></div>
+            <div><div class="flex justify-between mb-1"><span class="text-[12px] text-slate-400">Others (42 counties)</span><span class="text-[12px] font-medium text-slate-500">906 (18%)</span></div><div class="h-2 bg-surface-100 rounded-full overflow-hidden"><div class="h-full bg-surface-300 rounded-full bar-animate" style="--w:100%;width:18%;animation-delay:.5s"></div></div></div>
+          </div>
+        </div>
+
+        <!-- Top Earners -->
+        <div class="dash-card p-5">
+          <h3 class="text-sm font-semibold text-brand-900 mb-5">Top 10 Earners</h3>
+          <div class="space-y-2.5">
+            <div class="flex items-center gap-3 p-2 rounded-lg bg-gold-50/50 border border-gold-100"><span class="text-[11px] font-bold text-gold-600 w-5">1</span><div class="w-7 h-7 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-[9px] font-bold">SM</div><div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Sarah Muthoni</p><p class="text-[10px] text-slate-400">50 direct + 180 indirect</p></div><span class="text-[12px] font-bold text-brand-900">KES 44,500</span></div>
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-50 transition-colors"><span class="text-[11px] font-bold text-slate-400 w-5">2</span><div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[9px] font-bold">JK</div><div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">John Kamau</p><p class="text-[10px] text-slate-400">50 direct + 49 indirect</p></div><span class="text-[12px] font-bold text-brand-900">KES 25,350</span></div>
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-50 transition-colors"><span class="text-[11px] font-bold text-slate-400 w-5">3</span><div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[9px] font-bold">JK</div><div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">James Kipchoge</p><p class="text-[10px] text-slate-400">35 direct + 120 indirect</p></div><span class="text-[12px] font-bold text-brand-900">KES 29,750</span></div>
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-50 transition-colors"><span class="text-[11px] font-bold text-slate-400 w-5">4</span><div class="w-7 h-7 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[9px] font-bold">GW</div><div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Grace Wanjiru</p><p class="text-[10px] text-slate-400">28 direct + 65 indirect</p></div><span class="text-[12px] font-bold text-brand-900">KES 19,850</span></div>
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-50 transition-colors"><span class="text-[11px] font-bold text-slate-400 w-5">5</span><div class="w-7 h-7 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[9px] font-bold">AO</div><div class="flex-1 min-w-0"><p class="text-[12px] font-medium text-brand-900 truncate">Amos Oduor</p><p class="text-[10px] text-slate-400">22 direct + 48 indirect</p></div><span class="text-[12px] font-bold text-brand-900">KES 14,900</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== USERS ==================== -->
+    <div id="page-users" class="page-panel">
+      <div class="dash-card overflow-hidden">
+        <div class="p-5 border-b border-surface-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 bg-surface-50 border border-surface-200 rounded-lg px-3 py-1.5">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400"></i>
+              <input type="text" id="userSearch" placeholder="Search by name or phone..." class="bg-transparent text-[12px] outline-none w-48 placeholder:text-slate-400" oninput="filterUsers()" />
+            </div>
+            <select id="userStatusFilter" class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto" onchange="filterUsers()">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="pending_payment">Pending Payment</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+          <p class="text-[11px] text-slate-400"><span id="userCount" class="font-semibold text-brand-900">5,024</span> total users</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead><tr class="border-b border-surface-100">
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">User</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Phone</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">County</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Balance</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Total Earned</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Referred By</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Status</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Actions</th>
+            </tr></thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-4 border-t border-surface-100 flex items-center justify-between">
+          <p class="text-[11px] text-slate-400">Showing 1-10 of 5,024</p>
+          <div class="flex items-center gap-1">
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400 hover:bg-surface-50 transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <button class="w-8 h-8 rounded-lg bg-brand-600 text-white text-[12px] font-semibold flex items-center justify-center">1</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">2</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">3</button>
+            <span class="text-slate-400 px-1">…</span>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center hover:bg-surface-50 transition-colors">503</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400 hover:bg-surface-50 transition-colors"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== WITHDRAWALS ==================== -->
+    <div id="page-withdrawals" class="page-panel">
+      <div class="dash-card overflow-hidden">
+        <div class="p-5 border-b border-surface-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <h3 class="text-sm font-semibold text-brand-900">Withdrawal Requests</h3>
+            <select id="wdFilter" class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto" onchange="filterWithdrawals()">
+              <option value="pending">Pending (7)</option>
+              <option value="all">All</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+          <button onclick="approveAllPending()" class="cta-green text-white text-[12px] font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5"><i data-lucide="check-check" class="w-3.5 h-3.5"></i>Approve All Pending</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead><tr class="border-b border-surface-100">
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">User</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">M-Pesa</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-right">Amount</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Note</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Requested</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Status</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-center">Actions</th>
+            </tr></thead>
+            <tbody id="wdTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== TRANSACTIONS ==================== -->
+    <div id="page-transactions" class="page-panel">
+      <div class="dash-card overflow-hidden">
+        <div class="p-5 border-b border-surface-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 class="text-sm font-semibold text-brand-900">Platform Transaction Log</h3>
+          <div class="flex items-center gap-2">
+            <select id="txAdminFilter" class="form-select text-[12px] py-1.5 pl-3 pr-8 border-surface-200 rounded-lg" style="width:auto" onchange="renderAdminTx()">
+              <option value="all">All Types</option>
+              <option value="welcome_bonus">Welcome Bonus</option>
+              <option value="direct_commission">Direct Commission</option>
+              <option value="upline_override">Upline Override</option>
+              <option value="withdrawal">Withdrawal</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead><tr class="border-b border-surface-100">
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Date</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">User</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Type</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3">Description</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-right">Amount</th>
+              <th class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-5 py-3 text-right">Balance After</th>
+            </tr></thead>
+            <tbody id="adminTxBody"></tbody>
+          </table>
+        </div>
+        <div class="p-4 border-t border-surface-100 flex items-center justify-between">
+          <p class="text-[11px] text-slate-400">Showing 1-15 of 15,340 transactions</p>
+          <div class="flex items-center gap-1">
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <button class="w-8 h-8 rounded-lg bg-brand-600 text-white text-[12px] font-semibold flex items-center justify-center">1</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center">2</button>
+            <span class="text-slate-400 px-1">…</span>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 text-[12px] font-medium text-slate-500 flex items-center justify-center">1023</button>
+            <button class="w-8 h-8 rounded-lg border border-surface-200 flex items-center justify-center text-slate-400"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== REFERRAL NETWORK ==================== -->
+    <div id="page-referrals" class="page-panel">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+          <div class="dash-card p-5 sm:p-6 mb-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Referral Tree Search</h3>
+            <div class="flex gap-2">
+              <input type="text" id="treeSearch" placeholder="Enter user name or referral code..." class="form-input flex-1" style="padding-left:14px" />
+              <button onclick="searchTree()" class="cta-primary text-white text-[12px] font-semibold px-5 py-2.5 rounded-lg flex items-center gap-1.5"><i data-lucide="search" class="w-3.5 h-3.5"></i>Search</button>
+            </div>
+          </div>
+          <div id="treeResult" class="dash-card p-5 sm:p-6">
+            <div class="text-center py-8">
+              <div class="w-16 h-16 rounded-2xl bg-surface-50 border border-surface-200 flex items-center justify-center mx-auto mb-4"><i data-lucide="git-branch" class="w-8 h-8 text-slate-300"></i></div>
+              <p class="text-sm text-slate-400 font-light">Search for a user to view their referral network tree</p>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Network Stats</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-surface-100"><span class="text-[12px] text-slate-400">Total Referral Links</span><span class="text-[12px] font-semibold text-brand-900">5,024</span></div>
+              <div class="flex justify-between py-2 border-b border-surface-100"><span class="text-[12px] text-slate-400">Active Referrers (≥1 ref)</span><span class="text-[12px] font-semibold text-brand-900">3,841 (76%)</span></div>
+              <div class="flex justify-between py-2 border-b border-surface-100"><span class="text-[12px] text-slate-400">Avg. Depth of Network</span><span class="text-[12px] font-semibold text-brand-900">2.1 levels</span></div>
+              <div class="flex justify-between py-2 border-b border-surface-100"><span class="text-[12px] text-slate-400">Users with 0 Referrals</span><span class="text-[12px] font-semibold text-amber-600">1,183 (24%)</span></div>
+              <div class="flex justify-between py-2"><span class="text-[12px] text-slate-400">Largest Single Network</span><span class="text-[12px] font-semibold text-brand-900">231 members</span></div>
+            </div>
+          </div>
+          <div class="dash-card p-5">
+            <h3 class="text-sm font-semibold text-brand-900 mb-4">Bonus Payouts Summary</h3>
+            <div class="space-y-2.5">
+              <div class="flex justify-between items-center py-2 border-b border-surface-100"><span class="text-[12px] text-slate-500">Welcome Bonuses Given</span><span class="text-[13px] font-bold text-gold-600">KES 2,512,000</span></div>
+              <div class="flex justify-between items-center py-2 border-b border-surface-100"><span class="text-[12px] text-slate-500">Direct Commissions</span><span class="text-[13px] font-bold text-brand-700">KES 1,344,200</span></div>
+              <div class="flex justify-between items-center py-2"><span class="text-[12px] text-slate-500">Upline Overrides</span><span class="text-[13px] font-bold text-brand-500">KES 1,162,400</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== SETTINGS ==================== -->
+    <div id="page-settings" class="page-panel">
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="dash-card p-5 sm:p-6">
+          <h3 class="text-sm font-semibold text-brand-900 mb-1">Commission Structure</h3>
+          <p class="text-[12px] text-slate-400 font-light mb-6">Changes apply to new referrals only.</p>
+          <div class="space-y-5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Welcome Bonus (KES)</label>
+              <input type="number" class="form-input" style="padding-left:14px" value="500" id="setBonus" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Direct Commission (KES)</label>
+              <input type="number" class="form-input" style="padding-left:14px" value="350" id="setDirect" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Upline Override (KES)</label>
+              <input type="number" class="form-input" style="padding-left:14px" value="150" id="setUpline" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Membership Fee (KES)</label>
+              <input type="number" class="form-input" style="padding-left:14px" value="1000" id="setFee" />
+            </div>
+            <button onclick="saveSettings()" class="cta-primary text-white text-[13px] font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save Commission Settings</button>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="dash-card p-5 sm:p-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-1">Platform Toggles</h3>
+            <p class="text-[12px] text-slate-400 font-light mb-6">Control platform features.</p>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div><p class="text-[13px] font-medium text-brand-900">New Registrations</p><p class="text-[11px] text-slate-400">Allow new users to join</p></div>
+                <div class="toggle-track active" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div><p class="text-[13px] font-medium text-brand-900">Withdrawals</p><p class="text-[11px] text-slate-400">Allow users to withdraw</p></div>
+                <div class="toggle-track active" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div><p class="text-[13px] font-medium text-brand-900">Welcome Bonus</p><p class="text-[11px] text-slate-400">Give KES 500 on signup</p></div>
+                <div class="toggle-track active" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div><p class="text-[13px] font-medium text-brand-900">Auto-Approve Withdrawals</p><p class="text-[11px] text-slate-400">Skip manual approval (danger)</p></div>
+                <div class="toggle-track" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div><p class="text-[13px] font-medium text-brand-900">Maintenance Mode</p><p class="text-[11px] text-slate-400">Show maintenance page to users</p></div>
+                <div class="toggle-track" onclick="toggleSwitch(this)"><div class="toggle-thumb"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="dash-card p-5 sm:p-6">
+            <h3 class="text-sm font-semibold text-brand-900 mb-1">M-Pesa Integration</h3>
+            <p class="text-[12px] text-slate-400 font-light mb-5">Daraja API configuration.</p>
+            <div class="space-y-4">
+              <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Paybill Number</label><input type="text" class="form-input" style="padding-left:14px" value="123456" /></div>
+              <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Passkey</label><input type="password" class="form-input" style="padding-left:14px" value="••••••••••••" /></div>
+              <button onclick="showToast('M-Pesa settings saved')" class="cta-outline text-[13px] font-semibold px-5 py-2.5 rounded-lg flex items-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Save M-Pesa Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<script>
+lucide.createIcons();
+
+// ===== DATA =====
+const usersData = [
+  { id:1, name:'Sarah Muthoni', initials:'SM', phone:'711 223 344', county:'Nairobi', balance:45000, earned:85000, referred:'—', status:'active', color:'bg-brand-100 text-brand-700' },
+  { id:2, name:'John Kamau', initials:'JK', phone:'712 345 678', county:'Nairobi', balance:24850, earned:25350, referred:'Sarah M.', status:'active', color:'bg-purple-100 text-purple-700' },
+  { id:3, name:'Mary Ochieng', initials:'MO', phone:'713 456 789', county:'Kisumu', balance:1550, earned:2050, referred:'John K.', status:'active', color:'bg-pink-100 text-pink-700' },
+  { id:4, name:'Peter Mwangi', initials:'PM', phone:'714 567 890', county:'Nakuru', balance:2100, earned:2600, referred:'John K.', status:'active', color:'bg-blue-100 text-blue-700' },
+  { id:5, name:'Faith Wanjiku', initials:'FW', phone:'715 678 901', county:'Mombasa', balance:500, earned:500, referred:'John K.', status:'pending_payment', color:'bg-amber-100 text-amber-700' },
+  { id:6, name:'James Otieno', initials:'JO', phone:'716 789 012', county:'Kisumu', balance:500, earned:500, referred:'Peter M.', status:'active', color:'bg-emerald-100 text-emerald-700' },
+  { id:7, name:'Grace Nyambura', initials:'GN', phone:'717 890 123', county:'Nairobi', balance:1900, earned:2400, referred:'John K.', status:'active', color:'bg-teal-100 text-teal-700' },
+  { id:8, name:'David Kiprop', initials:'DK', phone:'718 901 234', county:'Uasin Gishu', balance:500, earned:500, referred:'Grace N.', status:'active', color:'bg-cyan-100 text-cyan-700' },
+  { id:9, name:'Lucy Akinyi', initials:'LA', phone:'719 012 345', county:'Nairobi', balance:0, earned:500, referred:'John K.', status:'suspended', color:'bg-red-100 text-red-700' },
+  { id:10, name:'Samuel Karanja', initials:'SK', phone:'720 123 456', county:'Kiambu', balance:3200, earned:4200, referred:'Sarah M.', status:'active', color:'bg-indigo-100 text-indigo-700' },
+];
+
+const withdrawalsData = [
+  { id:1, user:'John Kamau', initials:'JK', color:'bg-purple-100 text-purple-700', phone:'+254 712 345 678', amount:8500, note:'Personal use', date:'Mar 18, 2025 14:35', status:'pending' },
+  { id:2, user:'Mary Ochieng', initials:'MO', color:'bg-pink-100 text-pink-700', phone:'+254 713 456 789', amount:5000, note:'Rent', date:'Mar 18, 2025 14:20', status:'pending' },
+  { id:3, user:'Peter Mwangi', initials:'PM', color:'bg-blue-100 text-blue-700', phone:'+254 714 567 890', amount:12000, note:'', date:'Mar 18, 2025 13:50', status:'pending' },
+  { id:4, user:'Samuel Karanja', initials:'SK', color:'bg-indigo-100 text-indigo-700', phone:'+254 720 123 456', amount:3500, note:'Savings', date:'Mar 18, 2025 12:10', status:'pending' },
+  { id:5, user:'Grace Nyambura', initials:'GN', color:'bg-teal-100 text-teal-700', phone:'+254 717 890 123', amount:7000, note:'School fees', date:'Mar 18, 2025 11:45', status:'pending' },
+  { id:6, user:'David Kiprop', initials:'DK', color:'bg-cyan-100 text-cyan-700', phone:'+254 718 901 234', amount:1000, note:'Airtime', date:'Mar 17, 2025 22:30', status:'pending' },
+  { id:7, user:'James Otieno', initials:'JO', color:'bg-emerald-100 text-emerald-700', phone:'+254 716 789 012', amount:11500, note:'Business', date:'Mar 17, 2025 20:15', status:'pending' },
+  { id:8, user:'Sarah Muthoni', initials:'SM', color:'bg-brand-100 text-brand-700', phone:'+254 711 223 344', amount:15000, note:'', date:'Mar 17, 2025 18:00', status:'completed' },
+  { id:9, user:'John Kamau', initials:'JK', color:'bg-purple-100 text-purple-700', phone:'+254 712 345 678', amount:5000, note:'Rent', date:'Mar 14, 2025 09:20', status:'completed' },
+  { id:10, user:'Esther Njeri', initials:'EN', color:'bg-lime-100 text-lime-700', phone:'+254 722 234 567', amount:2000, note:'Food', date:'Mar 13, 2025 16:45', status:'completed' },
+];
+
+const adminTxData = [
+  { date:'Mar 18, 14:32', user:'Mary Ochieng', type:'direct_commission', desc:'Direct → Mary Ochieng (Referrer: John Kamau)', amount:350, balance:2050 },
+  { date:'Mar 18, 14:20', user:'Mary Ochieng', type:'welcome_bonus', desc:'Welcome Bonus → Mary Ochieng', amount:500, balance:500 },
+  { date:'Mar 18, 14:14', user:'John Kamau', type:'upline_override', desc:'Upline → John Kamau (via Peter Mwangi)', amount:150, balance:24500 },
+  { date:'Mar 17, 16:40', user:'Peter Mwangi', type:'direct_commission', desc:'Direct → Peter Mwangi (Referrer: John Kamau)', amount:350, balance:2600 },
+  { date:'Mar 17, 16:40', user:'Peter Mwangi', type:'welcome_bonus', desc:'Welcome Bonus → Peter Mwangi', amount:500, balance:500 },
+  { date:'Mar 16, 20:15', user:'Faith Wanjiku', type:'direct_commission', desc:'Direct → Faith Wanjiku (Referrer: John Kamau)', amount:350, balance:350 },
+  { date:'Mar 16, 18:33', user:'John Kamau', type:'upline_override', desc:'Upline → John Kamau (via Peter Mwangi)', amount:150, balance:24350 },
+  { date:'Mar 16, 18:33', user:'James Otieno', type:'direct_commission', desc:'Direct → James Otieno (Referrer: Peter Mwangi)', amount:350, balance:500 },
+  { date:'Mar 16, 18:33', user:'James Otieno', type:'welcome_bonus', desc:'Welcome Bonus → James Otieno', amount:500, balance:500 },
+  { date:'Mar 15, 22:08', user:'Grace Nyambura', type:'direct_commission', desc:'Direct → Grace Nyambura (Referrer: John Kamau)', amount:350, balance:2400 },
+  { date:'Mar 15, 19:45', user:'David Kiprop', type:'direct_commission', desc:'Direct → David Kiprop (Referrer: Grace Nyambura)', amount:350, balance:500 },
+  { date:'Mar 15, 19:45', user:'David Kiprop', type:'welcome_bonus', desc:'Welcome Bonus → David Kiprop', amount:500, balance:500 },
+  { date:'Mar 15, 19:45', user:'John Kamau', type:'upline_override', desc:'Upline → John Kamau (via Grace Nyambura)', amount:150, balance:24200 },
+  { date:'Mar 14, 09:20', user:'John Kamau', type:'withdrawal', desc:'Withdrawal → M-Pesa 712345678', amount:-5000, balance:27200 },
+  { date:'Mar 13, 20:44', user:'Esther Njeri', type:'direct_commission', desc:'Direct → Esther Njeri (Referrer: John Kamau)', amount:350, balance:1200 },
+];
+
+
+// ===== SIDEBAR =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+// ===== PAGE SWITCHING =====
+const pageTitles = { overview:'Dashboard', analytics:'Analytics', users:'Users', withdrawals:'Withdrawals', transactions:'Transactions', referrals:'Referral Network', settings:'Settings' };
+function switchPage(page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector(`.nav-item[data-page="${page}"]`);
+  if (nav) nav.classList.add('active');
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('page-' + page);
+  if (panel) panel.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[page] || 'Dashboard';
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+  if (page === 'users') renderUsers();
+  if (page === 'withdrawals') renderWithdrawals();
+  if (page === 'transactions') renderAdminTx();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ===== MODAL =====
+function openModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+  lucide.createIcons();
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+// ===== TOGGLE SWITCH =====
+function toggleSwitch(el) {
+  el.classList.toggle('active');
+  const label = el.closest('div').querySelector('p.text-\\[13px\\]').textContent;
+  const state = el.classList.contains('active') ? 'enabled' : 'disabled';
+  showToast(`${label} ${state}`);
+}
+
+
+// ===== USERS TABLE =====
+function renderUsers() {
+  const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
+  const statusF = document.getElementById('userStatusFilter')?.value || 'all';
+  let data = usersData;
+  if (search) data = data.filter(u => u.name.toLowerCase().includes(search) || u.phone.replace(/\s/g,'').includes(search.replace(/\s/g,'')));
+  if (statusF !== 'all') data = data.filter(u => u.status === statusF);
+
+  const statusCfg = {
+    active: { label:'Active', cls:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+    pending_payment: { label:'Pending', cls:'bg-amber-50 text-amber-700 border border-amber-100' },
+    suspended: { label:'Suspended', cls:'bg-red-50 text-red-600 border border-red-100' },
+  };
+
+  document.getElementById('usersTableBody').innerHTML = data.map(u => {
+    const s = statusCfg[u.status] || statusCfg.active;
+    return `<tr class="tx-row border-b border-surface-50">
+      <td class="px-5 py-3.5"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg ${u.color} flex items-center justify-center text-[10px] font-bold flex-shrink-0">${u.initials}</div><div><p class="text-[13px] font-medium text-brand-900">${u.name}</p><p class="text-[10px] text-slate-400">ID: ${u.id}</p></div></div></td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-600 font-mono">${u.phone}</td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-500">${u.county}</td>
+      <td class="px-5 py-3.5 text-[13px] font-semibold text-brand-900">KES ${u.balance.toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[13px] font-medium text-brand-800">KES ${u.earned.toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-500">${u.referred}</td>
+      <td class="px-5 py-3.5"><span class="badge ${s.cls}">${s.label}</span></td>
+      <td class="px-5 py-3.5">
+        <div class="flex items-center gap-1">
+          <button onclick="viewUser(${u.id})" class="w-7 h-7 rounded-lg hover:bg-brand-50 flex items-center justify-center transition-colors" title="View"><i data-lucide="eye" class="w-3.5 h-3.5 text-brand-500"></i></button>
+          <button onclick="editUser(${u.id})" class="w-7 h-7 rounded-lg hover:bg-surface-50 flex items-center justify-center transition-colors" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5 text-slate-400"></i></button>
+          <button onclick="toggleUserStatus(${u.id})" class="w-7 h-7 rounded-lg hover:bg-${u.status==='suspended'?'emerald':'red'}-50 flex items-center justify-center transition-colors" title="${u.status==='suspended'?'Activate':'Suspend'}"><i data-lucide="${u.status==='suspended'?'user-check':'user-x'}" class="w-3.5 h-3.5 text-slate-400"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('userCount').textContent = data.length;
+  lucide.createIcons();
+}
+function filterUsers() { renderUsers(); }
+
+function viewUser(id) {
+  const u = usersData.find(x => x.id === id);
+  if (!u) return;
+  openModal(`
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-base font-semibold text-brand-900">User Details</h3>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-surface-50 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4 text-slate-400"></i></button>
+      </div>
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-2xl ${u.color} flex items-center justify-center text-lg font-bold">${u.initials}</div>
+        <div><p class="text-lg font-semibold text-brand-900">${u.name}</p><p class="text-[12px] text-slate-400">${u.phone} • ${u.county}</p></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="bg-surface-50 rounded-xl p-3"><p class="text-[10px] text-slate-400 uppercase tracking-wider">Balance</p><p class="text-lg font-semibold text-brand-900">KES ${u.balance.toLocaleString()}</p></div>
+        <div class="bg-surface-50 rounded-xl p-3"><p class="text-[10px] text-slate-400 uppercase tracking-wider">Total Earned</p><p class="text-lg font-semibold text-brand-900">KES ${u.earned.toLocaleString()}</p></div>
+        <div class="bg-surface-50 rounded-xl p-3"><p class="text-[10px] text-slate-400 uppercase tracking-wider">Status</p><p class="text-sm font-semibold text-brand-900 capitalize">${u.status.replace('_',' ')}</p></div>
+        <div class="bg-surface-50 rounded-xl p-3"><p class="text-[10px] text-slate-400 uppercase tracking-wider">Referred By</p><p class="text-sm font-semibold text-brand-900">${u.referred}</p></div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeModal();editUser(${u.id})" class="cta-outline text-[12px] font-semibold px-4 py-2.5 rounded-lg flex items-center gap-1.5 flex-1 justify-center"><i data-lucide="pencil" class="w-3.5 h-3.5"></i>Edit User</button>
+        <button onclick="closeModal()" class="cta-primary text-white text-[12px] font-semibold px-4 py-2.5 rounded-lg flex-1 text-center">Close</button>
+      </div>
+    </div>
+  `);
+}
+
+function editUser(id) {
+  const u = usersData.find(x => x.id === id);
+  if (!u) return;
+  openModal(`
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-base font-semibold text-brand-900">Edit User</h3>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-surface-50 flex items-center justify-center"><i data-lucide="x" class="w-4 h-4 text-slate-400"></i></button>
+      </div>
+      <div class="space-y-4">
+        <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Name</label><input type="text" class="form-input" style="padding-left:14px" value="${u.name}" id="editName" /></div>
+        <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">County</label><input type="text" class="form-input" style="padding-left:14px" value="${u.county}" id="editCounty" /></div>
+        <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Status</label>
+          <select class="form-select" style="padding-left:14px" id="editStatus">
+            <option ${u.status==='active'?'selected':''} value="active">Active</option>
+            <option ${u.status==='pending_payment'?'selected':''} value="pending_payment">Pending Payment</option>
+            <option ${u.status==='suspended'?'selected':''} value="suspended">Suspended</option>
+          </select>
+        </div>
+        <div><label class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1.5">Balance Override (KES)</label><input type="number" class="form-input" style="padding-left:14px" value="${u.balance}" id="editBalance" /></div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveUserEdit(${u.id})" class="cta-primary text-white text-[12px] font-semibold px-5 py-2.5 rounded-lg flex items-center gap-1.5 flex-1 justify-center"><i data-lucide="save" class="w-3.5 h-3.5"></i>Save Changes</button>
+          <button onclick="closeModal()" class="cta-outline text-[12px] font-semibold px-5 py-2.5 rounded-lg flex-1 text-center">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function saveUserEdit(id) {
+  const u = usersData.find(x => x.id === id);
+  if (!u) return;
+  u.name = document.getElementById('editName').value;
+  u.county = document.getElementById('editCounty').value;
+  u.status = document.getElementById('editStatus').value;
+  u.balance = parseInt(document.getElementById('editBalance').value) || 0;
+  closeModal();
+  renderUsers();
+  showToast(`User "${u.name}" updated successfully`);
+}
+
+function toggleUserStatus(id) {
+  const u = usersData.find(x => x.id === id);
+  if (!u) return;
+  if (u.status === 'suspended') {
+    u.status = 'active';
+    showToast(`${u.name} has been activated`);
+  } else {
+    u.status = 'suspended';
+    showToast(`${u.name} has been suspended`);
+  }
+  renderUsers();
+}
+
+
+// ===== WITHDRAWALS TABLE =====
+function renderWithdrawals() {
+  const filter = document.getElementById('wdFilter')?.value || 'pending';
+  let data = withdrawalsData;
+  if (filter !== 'all') data = withdrawalsData.filter(w => w.status === filter);
+
+  const statusCfg = {
+    pending: { label:'Pending', cls:'bg-amber-50 text-amber-700 border border-amber-100' },
+    processing: { label:'Processing', cls:'bg-blue-50 text-blue-700 border border-blue-100' },
+    completed: { label:'Completed', cls:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+    failed: { label:'Failed', cls:'bg-red-50 text-red-600 border border-red-100' },
+  };
+
+  document.getElementById('wdTableBody').innerHTML = data.map(w => {
+    const s = statusCfg[w.status];
+    const isPending = w.status === 'pending';
+    return `<tr class="tx-row border-b border-surface-50 ${isPending ? 'bg-amber-50/30' : ''}">
+      <td class="px-5 py-3.5"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded-full ${w.color} flex items-center justify-center text-[9px] font-bold flex-shrink-0">${w.initials}</div><span class="text-[13px] font-medium text-brand-900">${w.user}</span></div></td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-500 font-mono">${w.phone}</td>
+      <td class="px-5 py-3.5 text-[13px] font-bold text-brand-900 text-right">KES ${w.amount.toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-400">${w.note || '—'}</td>
+      <td class="px-5 py-3.5 text-[11px] text-slate-400 whitespace-nowrap">${w.date}</td>
+      <td class="px-5 py-3.5"><span class="badge ${s.cls}">${s.label}</span></td>
+      <td class="px-5 py-3.5 text-center">
+        ${isPending ? `
+          <div class="flex items-center justify-center gap-1">
+            <button onclick="approveWd(${w.id})" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 flex items-center justify-center transition-colors" title="Approve"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i></button>
+            <button onclick="rejectWd(${w.id})" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" title="Reject"><i data-lucide="x" class="w-3.5 h-3.5 text-red-500"></i></button>
+          </div>
+        ` : ''}
+      </td>
+    </tr>`;
+  }).join('');
+
+  if (data.length === 0) {
+    document.getElementById('wdTableBody').innerHTML = '<tr><td colspan="7" class="px-5 py-10 text-center text-[13px] text-slate-400">No withdrawals found for this filter.</td></tr>';
+  }
+  lucide.createIcons();
+}
+
+function filterWithdrawals() { renderWithdrawals(); }
+
+function approveWd(id) {
+  const w = withdrawalsData.find(x => x.id === id);
+  if (!w) return;
+  w.status = 'completed';
+  renderWithdrawals();
+  showToast(`KES ${w.amount.toLocaleString()} withdrawal for ${w.user} approved & sent`);
+}
+
+function rejectWd(id) {
+  const w = withdrawalsData.find(x => x.id === id);
+  if (!w) return;
+  w.status = 'failed';
+  renderWithdrawals();
+  showToast(`KES ${w.amount.toLocaleString()} withdrawal for ${w.user} rejected`);
+}
+
+function approveAllPending() {
+  let count = 0;
+  withdrawalsData.forEach(w => { if (w.status === 'pending') { w.status = 'completed'; count++; } });
+  renderWithdrawals();
+  if (count > 0) showToast(`${count} pending withdrawals approved and processed via M-Pesa`);
+  else showToast('No pending withdrawals to approve');
+}
+
+
+// ===== ADMIN TRANSACTIONS =====
+function renderAdminTx() {
+  const filter = document.getElementById('txAdminFilter')?.value || 'all';
+  let data = adminTxData;
+  if (filter !== 'all') data = adminTxData.filter(t => t.type === filter);
+
+  const typeCfg = {
+    welcome_bonus: { label:'Bonus', cls:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+    direct_commission: { label:'Direct', cls:'bg-brand-50 text-brand-700 border border-brand-100' },
+    upline_override: { label:'Upline', cls:'bg-gold-50 text-gold-700 border border-gold-100' },
+    withdrawal: { label:'Withdrawal', cls:'bg-red-50 text-red-600 border border-red-100' },
+  };
+
+  document.getElementById('adminTxBody').innerHTML = data.map(tx => {
+    const cfg = typeCfg[tx.type] || typeCfg.direct_commission;
+    const isNeg = tx.amount < 0;
+    return `<tr class="tx-row border-b border-surface-50">
+      <td class="px-5 py-3.5 text-[11px] text-slate-400 whitespace-nowrap">${tx.date}</td>
+      <td class="px-5 py-3.5 text-[13px] font-medium text-brand-900">${tx.user}</td>
+      <td class="px-5 py-3.5"><span class="badge ${cfg.cls}">${cfg.label}</span></td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-500 max-w-xs truncate">${tx.desc}</td>
+      <td class="px-5 py-3.5 text-[13px] font-semibold text-right ${isNeg ? 'text-red-500' : 'text-emerald-600'}">${isNeg ? '' : '+'}KES ${Math.abs(tx.amount).toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${tx.balance.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+
+  if (data.length === 0) {
+    document.getElementById('adminTxBody').innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-slate-400">No transactions found for this filter.</td></tr>';
+  }
+}
+
+
+// ===== REFERRAL TREE SEARCH =====
+function searchTree() {
+  const query = document.getElementById('treeSearch').value.trim().toLowerCase();
+  const container = document.getElementById('treeResult');
+
+  if (!query) {
+    container.innerHTML = '<div class="text-center py-8"><div class="w-16 h-16 rounded-2xl bg-surface-50 border border-surface-200 flex items-center justify-center mx-auto mb-4"><i data-lucide="git-branch" class="w-8 h-8 text-slate-300"></i></div><p class="text-sm text-slate-400 font-light">Search for a user to view their referral network tree</p></div>';
+    lucide.createIcons();
+    return;
+  }
+
+  // Mock search against seed data (defaults to John Kamau if matched)
+  const user = usersData.find(u => u.name.toLowerCase().includes(query) || ('john-k712345678').includes(query));
+  
+  if (!user) {
+    container.innerHTML = '<div class="text-center py-8"><div class="w-16 h-16 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-4"><i data-lucide="search-x" class="w-8 h-8 text-red-300"></i></div><p class="text-sm text-slate-400 font-light">No user found. Try "John Kamau" or "JOHN-K712345678"</p></div>';
+    lucide.createIcons();
+    return;
+  }
+
+  // Render visual tree structure
+  container.innerHTML = `
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">${user.initials}</div>
+      <div>
+        <p class="text-sm font-semibold text-brand-900">${user.name}</p>
+        <p class="text-[11px] text-slate-400">Referral Code: JOHN-K712345678 • 50 Direct • 49 Indirect</p>
+      </div>
+    </div>
+    
+    <div class="border-l-2 border-brand-200 ml-5 pl-6 space-y-4">
+      <!-- Direct 1: Mary (has sub-referrals) -->
+      <div class="relative">
+        <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-brand-500 border-2 border-white shadow-sm"></div>
+        <div class="bg-surface-50 rounded-xl p-3 border border-surface-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[9px] font-bold">MO</div><div><p class="text-[12px] font-medium text-brand-900">Mary Ochieng</p><p class="text-[10px] text-slate-400">Direct • 3 sub-referrals</p></div></div>
+            <span class="text-[11px] font-semibold text-brand-700">KES 350</span>
+          </div>
+          <!-- Mary's sub-referrals (Indirect to John) -->
+          <div class="border-l-2 border-gold-200 ml-3 pl-5 mt-3 space-y-2">
+            <div class="relative"><div class="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-gold-400 border-2 border-white shadow-sm"></div><div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-surface-100"><div class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[8px] font-bold">A</div><div><p class="text-[11px] font-medium text-brand-900">Alice N.</p><p class="text-[9px] text-slate-400">Indirect</p></div><span class="ml-auto text-[10px] font-semibold text-gold-600">KES 150</span></div></div>
+            <div class="relative"><div class="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-gold-400 border-2 border-white shadow-sm"></div><div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-surface-100"><div class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[8px] font-bold">B</div><div><p class="text-[11px] font-medium text-brand-900">Bob M.</p><p class="text-[9px] text-slate-400">Indirect</p></div><span class="ml-auto text-[10px] font-semibold text-gold-600">KES 150</span></div></div>
+            <div class="relative"><div class="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-gold-400 border-2 border-white shadow-sm"></div><div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-surface-100"><div class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[8px] font-bold">C</div><div><p class="text-[11px] font-medium text-brand-900">Chris O.</p><p class="text-[9px] text-slate-400">Indirect</p></div><span class="ml-auto text-[10px] font-semibold text-gold-600">KES 150</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct 2: Peter (has sub-referrals) -->
+      <div class="relative">
+        <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-brand-500 border-2 border-white shadow-sm"></div>
+        <div class="bg-surface-50 rounded-xl p-3 border border-surface-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[9px] font-bold">PM</div><div><p class="text-[12px] font-medium text-brand-900">Peter Mwangi</p><p class="text-[10px] text-slate-400">Direct • 5 sub-referrals</p></div></div>
+            <span class="text-[11px] font-semibold text-brand-700">KES 350</span>
+          </div>
+          <div class="border-l-2 border-gold-200 ml-3 pl-5 mt-3 space-y-2">
+            <div class="relative"><div class="absolute -left-[25px] top-1 w-3 h-3 rounded-full bg-gold-400 border-2 border-white shadow-sm"></div><div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-surface-100"><div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[8px] font-bold">JO</div><div><p class="text-[11px] font-medium text-brand-900">James Otieno</p><p class="text-[9px] text-slate-400">Indirect</p></div><span class="ml-auto text-[10px] font-semibold text-gold-600">KES 150</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct 3: Faith (no sub-referrals) -->
+      <div class="relative">
+        <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-brand-500 border-2 border-white shadow-sm"></div>
+        <div class="bg-surface-50 rounded-xl p-3 border border-surface-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[9px] font-bold">FW</div><div><p class="text-[12px] font-medium text-brand-900">Faith Wanjiku</p><p class="text-[10px] text-slate-400">Direct • 0 sub-referrals</p></div></div>
+            <span class="text-[11px] font-semibold text-brand-700">KES 350</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-6 pt-5 border-t border-surface-100 flex items-center gap-4">
+      <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-brand-500"></div><span class="text-[11px] text-slate-500">Direct Referral (KES 350)</span></div>
+      <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-gold-400"></div><span class="text-[11px] text-slate-500">Indirect/Upline (KES 150)</span></div>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+
+// ===== SETTINGS =====
+function saveSettings() {
+  const bonus = document.getElementById('setBonus').value;
+  const direct = document.getElementById('setDirect').value;
+    const upline = document.getElementById('setUpline').value;
+  const fee = document.getElementById('setFee').value;
+
+  // Validate that direct + upline don't exceed fee
+  const totalPayout = parseInt(direct) + parseInt(upline) + parseInt(bonus);
+  
+  if (totalPayout > parseInt(fee)) {
+    showToast(`Warning: Total payout (KES ${totalPayout.toLocaleString()}) exceeds membership fee (KES ${parseInt(fee).toLocaleString()}). Platform will operate at a loss for these referrals.`);
+  } else {
+    const profit = parseInt(fee) - totalPayout;
+    showToast(`Commission settings saved. Platform profit per member: KES ${profit.toLocaleString()}`);
+  }
+}
+
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Render initial data for default page
+  renderUsers();
+  renderWithdrawals();
+  renderAdminTx();
+
+  // Add keyboard shortcut hints
+  document.addEventListener('keydown', (e) => {
+    // Escape to close modal
+    if (e.key === 'Escape') closeModal();
+    
+    // Ctrl+K to focus search (future enhancement)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      const search = document.querySelector('header input[type="text"]');
+      if (search) search.focus();
+    }
+  });
+
+  // Auto-refresh simulation (in production, this would be WebSocket or polling)
+  console.log('%c ZuriAgency Admin Panel ', 'background: #1E40AF; color: white; font-size: 14px; padding: 8px 16px; border-radius: 6px; font-weight: bold;');
+  console.log('%c Connected to database • 5,024 users • System healthy', 'color: #64748B; font-size: 11px;');
+});
+</script>
+
+</body>
+</html>
