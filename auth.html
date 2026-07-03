@@ -976,7 +976,7 @@
     });
 
     // ===== Handle Login =====
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       let valid = true;
 
@@ -988,7 +988,6 @@
 
       if (!valid) return;
 
-      // Simulate loading
       const btn = document.getElementById('loginBtn');
       const btnText = document.getElementById('loginBtnText');
       const btnIcon = document.getElementById('loginBtnIcon');
@@ -999,19 +998,34 @@
       btnIcon.classList.add('hidden');
       spinner.classList.remove('hidden');
 
-      setTimeout(() => {
+      try {
+        const response = await fetch('api/login.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, password })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification('Login successful! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = (result.user.phone === '700000000') ? 'admin/dashboard.html' : 'dashboard.html';
+          }, 1000);
+        } else {
+          showNotification(result.message, 'error');
+        }
+      } catch (err) {
+        showNotification('An error occurred. Please try again.', 'error');
+      } finally {
         btn.disabled = false;
         btnText.textContent = 'Log In to Dashboard';
         btnIcon.classList.remove('hidden');
         spinner.classList.add('hidden');
-
-        // For demo: show alert
-        showNotification('Login successful! Redirecting to dashboard...', 'success');
-      }, 2000);
+      }
     }
 
     // ===== Handle Register =====
-    function handleRegister(e) {
+    async function handleRegister(e) {
       e.preventDefault();
       let valid = true;
 
@@ -1019,6 +1033,7 @@
       const phone = document.getElementById('regPhone').value.replace(/\s/g, '');
       const email = document.getElementById('regEmail').value.trim();
       const county = document.getElementById('regCounty').value;
+      const referral_code = document.getElementById('regReferral').value.trim();
       const password = document.getElementById('regPassword').value;
       const confirmPassword = document.getElementById('regConfirmPassword').value;
       const terms = document.getElementById('regTerms').checked;
@@ -1033,25 +1048,37 @@
 
       if (!valid) return;
 
-      // Simulate loading
       const btn = document.getElementById('registerBtn');
       const btnText = document.getElementById('registerBtnText');
       const btnIcon = document.getElementById('registerBtnIcon');
       const spinner = document.getElementById('registerSpinner');
 
       btn.disabled = true;
-      btnText.textContent = 'Creating your account...';
+      btnText.textContent = 'Creating account...';
       btnIcon.classList.add('hidden');
       spinner.classList.remove('hidden');
 
-      setTimeout(() => {
+      try {
+        const response = await fetch('api/register.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, email, county, password, referral_code })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          switchTab('success');
+        } else {
+          showNotification(result.message, 'error');
+        }
+      } catch (err) {
+        showNotification('An error occurred. Please try again.', 'error');
+      } finally {
         btn.disabled = false;
         btnText.textContent = 'Create Account & Get KES 500 Bonus';
         btnIcon.classList.remove('hidden');
         spinner.classList.add('hidden');
-
-        switchTab('success');
-      }, 2500);
+      }
     }
 
     // ===== Handle Forgot Password =====
@@ -1072,7 +1099,7 @@
     }
 
     // ===== Simulate Payment =====
-    function simulatePayment() {
+    async function simulatePayment() {
       const btn = document.getElementById('paymentBtn');
       const btnText = document.getElementById('paymentBtnText');
 
@@ -1080,11 +1107,33 @@
       btnText.textContent = 'Verifying payment...';
       btn.style.opacity = '0.7';
 
-      setTimeout(() => {
-        btn.style.display = 'none';
-        document.getElementById('paymentSuccess').classList.remove('hidden');
-        document.getElementById('paymentSuccess').classList.add('fade-in-up');
-      }, 3000);
+      try {
+          // Get CSRF token first
+          const csrfRes = await fetch('api/csrf_token.php');
+          const csrfData = await csrfRes.json();
+          const token = csrfData.csrf_token;
+
+          const response = await fetch('api/activate.php', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': token }
+          });
+          const result = await response.json();
+          if (result.success) {
+            btn.style.display = 'none';
+            document.getElementById('paymentSuccess').classList.remove('hidden');
+            document.getElementById('paymentSuccess').classList.add('fade-in-up');
+          } else {
+            showNotification(result.message, 'error');
+            btn.disabled = false;
+            btnText.textContent = "I've Sent the Payment";
+            btn.style.opacity = '1';
+          }
+      } catch (err) {
+          showNotification('Verification failed', 'error');
+          btn.disabled = false;
+          btnText.textContent = "I've Sent the Payment";
+          btn.style.opacity = '1';
+      }
     }
 
     // ===== Toast Notification =====
