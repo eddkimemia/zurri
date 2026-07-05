@@ -763,7 +763,7 @@
                   </div>
                   <button onclick="simulatePayment()" id="paymentBtn" class="mpesa-badge w-full text-white text-[13px] font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90">
                     <i data-lucide="smartphone" class="w-4 h-4"></i>
-                    <span id="paymentBtnText">I've Sent the Payment</span>
+                    <span id="paymentBtnText">Pay Now via M-Pesa STK</span>
                   </button>
                 </div>
 
@@ -771,9 +771,9 @@
                   <div class="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center mx-auto mb-4 success-pulse">
                     <i data-lucide="check-circle" class="w-8 h-8 text-emerald-500"></i>
                   </div>
-                  <h3 class="text-lg font-semibold text-brand-900 mb-1">Payment Confirmed!</h3>
-                  <p class="text-[13px] text-slate-500 font-light mb-6">Your referral link is now active. You can start sharing and earning immediately.</p>
-                  <button onclick="window.location.href='index.html'" class="cta-primary text-white text-[14px] font-semibold px-8 py-3.5 rounded-xl inline-flex items-center gap-2">
+                  <h3 class="text-lg font-semibold text-brand-900 mb-1">Payment Initiated!</h3>
+                  <p class="text-[13px] text-slate-500 font-light mb-6">Please check your phone for the STK Push. Once confirmed, you can access your full dashboard.</p>
+                  <button onclick="window.location.href='dashboard.html'" class="cta-primary text-white text-[14px] font-semibold px-8 py-3.5 rounded-xl inline-flex items-center gap-2">
                     Go to Dashboard
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                   </button>
@@ -999,7 +999,7 @@
       spinner.classList.remove('hidden');
 
       try {
-        const response = await fetch('api/login.php', {
+        const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone, password })
@@ -1059,7 +1059,7 @@
       spinner.classList.remove('hidden');
 
       try {
-        const response = await fetch('api/register.php', {
+        const response = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, phone, email, county, password, referral_code })
@@ -1109,11 +1109,11 @@
 
       try {
           // Get CSRF token first
-          const csrfRes = await fetch('api/csrf_token.php');
+          const csrfRes = await fetch('/api/csrf-token');
           const csrfData = await csrfRes.json();
           const token = csrfData.csrf_token;
 
-          const response = await fetch('api/activate.php', {
+          const response = await fetch('/api/activate', {
             method: 'POST',
             headers: { 'X-CSRF-TOKEN': token }
           });

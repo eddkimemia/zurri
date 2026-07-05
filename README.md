@@ -1,76 +1,64 @@
-# ZuriAgency — Refer. Earn. Grow.
+# ZuriAgency — Production-Ready Referral Platform
 
-ZuriAgency is a production-ready referral-based income platform tailored for the Kenyan market. It allows users to earn commissions by referring others to the platform through a transparent, two-level structure.
+ZuriAgency is a high-performance, referral-based income platform tailored for the Kenyan market. It features a robust two-tier commission engine, a secure immutable ledger, and comprehensive administrative controls.
 
-## 🚀 Key Features
-- **Instant Payouts**: Direct integration with M-Pesa (simulated for sandbox).
-- **Two-Level Commissions**: Earn KES 350 for direct referrals and KES 150 for indirect referrals.
-- **Welcome Bonus**: New users receive KES 500 instantly upon joining.
-- **Robust Ledger**: Every transaction is recorded in an immutable ledger.
-- **Admin Dashboard**: Comprehensive management of users, stats, and withdrawal approvals.
+## 🚀 Tech Stack
+- **Frontend:** HTML5, Tailwind CSS, Lucide Icons (Static)
+- **Backend:** Node.js, Express.js
+- **Database:** SQLite (Relational Ledger)
+- **Security:** BCRYPT Hashing, CSRF Protection, XSS Sanitization
 
-## 🛠 Tech Stack
-- **Frontend**: Tailwind CSS, Lucide Icons, Vanilla JS (Fetch API).
-- **Backend**: PHP 8.3.
-- **Database**: SQLite (Production-ready schema included for MySQL/MariaDB).
+## 💰 Commission Structure
+1. **Welcome Bonus:** KES 500 (Credited immediately upon registration)
+2. **Direct Referral (Level 1):** KES 350
+3. **Indirect Referral (Level 2):** KES 150
 
----
+## 🛠️ Installation & Setup
 
-## 🧪 How to Test (Step-by-Step)
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
 
-Follow these steps to verify the entire platform flow:
+2. **Initialize Database:**
+   The database is automatically initialized on the first server start using `schema.sqlite.sql`.
 
-### 1. Start the Local Server
-Run the following command in the repository root:
-```bash
-php -S localhost:8000
-```
-Then navigate to `http://localhost:8000` in your browser.
+3. **Start the Server:**
+   ```bash
+   node server.js
+   ```
+   The application will be available at `http://localhost:8000`.
 
-### 2. Seed the Admin Account
-To access the admin panel, you need to seed the database:
-```bash
-php tests/seed_admin.php
-```
-**Admin Credentials**:
-- **Phone**: `700000000`
-- **Password**: `admin123`
+## 🧪 Testing & Verification
 
-### 3. User Registration (Referrer)
-1. Go to the home page and click **"Join Now"**.
-2. Switch to the **"Create Account"** tab.
-3. Register a new user (e.g., "User One", Phone: `711111111`).
-4. On the success screen, click **"I've Sent the Payment"** (Simulates KES 1,000 activation).
-5. Click **"Go to Dashboard"**. You should see your **KES 500 Welcome Bonus**.
-6. Copy your **Referral Code** from the sidebar or Profile section.
+We provide automated Node.js scripts to verify the core business logic.
 
-### 4. Direct Referral (Earn KES 350)
-1. Open a private/incognito window or logout.
-2. Register a second user (e.g., "User Two", Phone: `722222222`).
-3. **Important**: Enter the Referral Code from User One during registration.
-4. Activate User Two by clicking **"I've Sent the Payment"**.
-5. Login back as **User One**. Your balance should now be **KES 850** (500 bonus + 350 direct).
+1. **Full Referral Flow Test:**
+   Validates the two-tier commission calculation and user activation.
+   ```bash
+   node tests/node_verify_flow.js
+   ```
 
-### 5. Indirect Referral (Earn KES 150)
-1. Register a third user (User Three) using User Two's referral code.
-2. Activate User Three.
-3. Login as **User One**. Your balance should now be **KES 1,000** (850 + 150 indirect).
+2. **Withdrawal Refund Test:**
+   Ensures that failing a withdrawal as an admin correctly refunds the user's balance.
+   ```bash
+   node tests/node_test_refund.js
+   ```
 
-### 6. Withdrawal & Admin Approval
-1. While logged in as User One, go to the **"Withdraw"** tab.
-2. Enter an amount (e.g., KES 600) and click **"Withdraw to M-Pesa"**.
-3. Login as **Admin** (`700000000` / `admin123`).
-4. Go to the **"Withdrawals"** tab.
-5. Find the request and click the **Checkmark (Approve)** icon.
+## 🔐 Security Features
+- **CSRF Protection:** State-changing requests (POST/PUT/DELETE) require a valid `X-CSRF-TOKEN` header, obtainable from `/api/csrf-token`.
+- **XSS Protection:** All dynamic content in the dashboard is sanitized using a global `esc()` utility.
+- **Session Management:** Secure Express sessions for authentication.
+- **Accounting Integrity:** Balance updates are performed within ACID-compliant database transactions.
 
----
+## 👥 Admin Access
+- **Admin Phone:** `700000000`
+- **Admin Password:** Seeded via script or manually in DB (Default for testing: `admin123`).
+- **Dashboard:** Access via `/admin/dashboard.html` after logging in.
 
-## 📂 Project Structure
-- `api/`: Backend endpoints for user and admin actions.
-- `src/`: Core logic (Auth, ReferralManager, TransactionManager).
-- `tests/`: Automated test scripts and seeders.
-- `zuriagency.db`: SQLite database file.
-- `index.html`: Landing page.
-- `auth.html`: Integrated Login/Registration page.
-- `dashboard.html`: User panel.
-- `admin/dashboard.html`: Administration panel.
+## 📁 Repository Structure
+- `/src/db.js`: Database connection and schema management.
+- `/src/services/`: Core business logic (Auth, Referrals, Transactions).
+- `/tests/`: Automated verification scripts.
+- `/server.js`: Express application and API route definitions.
+- `index.html`, `auth.html`, `dashboard.html`: Frontend application layers.

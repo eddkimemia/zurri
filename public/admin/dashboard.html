@@ -639,7 +639,7 @@ let usersData = [];
 let CSRF_TOKEN = '';
 
 async function getCsrfToken() {
-    const res = await fetch('../api/csrf_token.php');
+    const res = await fetch('/api/csrf-token');
     const data = await res.json();
     if (data.success) CSRF_TOKEN = data.csrf_token;
 }
@@ -648,24 +648,26 @@ let adminTxData = [];
 
 async function loadAdminData() {
     try {
-        const statsRes = await fetch('../api/admin/stats.php');
+        const statsRes = await fetch('/api/admin/stats');
         const statsData = await statsRes.json();
         if (!statsData.success) { window.location.href = '../auth.html'; return; }
         updateStats(statsData.stats);
 
-        const usersRes = await fetch('../api/admin/users.php');
+        const usersRes = await fetch('/api/admin/users');
         const uData = await usersRes.json();
         usersData = uData.users || [];
 
-        const wdRes = await fetch('../api/admin/withdrawals.php');
+        const wdRes = await fetch('/api/admin/withdrawals');
         const wData = await wdRes.json();
         withdrawalsData = wData.withdrawals || [];
 
-        // Transaction data is also needed for the log page
-        adminTxData = []; // Can be fetched separately if needed
+        const txRes = await fetch('/api/admin/transactions');
+        const txData = await txRes.json();
+        adminTxData = txData.transactions || [];
 
         renderUsers();
         renderWithdrawals();
+        renderAdminTx();
     } catch (err) {
         console.error('Failed to load admin data', err);
     }
@@ -879,8 +881,8 @@ function renderWithdrawals() {
       <td class="px-5 py-3.5 text-center">
         ${isPending ? `
           <div class="flex items-center justify-center gap-1">
-            <button onclick="updateWdStatus(${w.id}, 'completed')" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 flex items-center justify-center transition-colors" title="Approve"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i></button>
-            <button onclick="updateWdStatus(${w.id}, 'failed')" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" title="Reject"><i data-lucide="x" class="w-3.5 h-3.5 text-red-500"></i></button>
+            <button onclick="updateWdStatus(${w.id}, 'approved')" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 flex items-center justify-center transition-colors" title="Approve & Send M-Pesa"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i></button>
+            <button onclick="updateWdStatus(${w.id}, 'failed')" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" title="Reject & Refund"><i data-lucide="x" class="w-3.5 h-3.5 text-red-500"></i></button>
           </div>
         ` : ''}
       </td>
@@ -897,7 +899,7 @@ function filterWithdrawals() { renderWithdrawals(); }
 
 async function updateWdStatus(id, status) {
     try {
-        const res = await fetch('../api/admin/withdrawals.php', {
+        const res = await fetch('/api/admin/withdrawals', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -943,12 +945,12 @@ function renderAdminTx() {
     const cfg = typeCfg[tx.type] || typeCfg.direct_commission;
     const isNeg = tx.amount < 0;
     return `<tr class="tx-row border-b border-surface-50">
-      <td class="px-5 py-3.5 text-[11px] text-slate-400 whitespace-nowrap">${esc(tx.date)}</td>
-      <td class="px-5 py-3.5 text-[13px] font-medium text-brand-900">${esc(tx.user)}</td>
+      <td class="px-5 py-3.5 text-[11px] text-slate-400 whitespace-nowrap">${new Date(tx.created_at).toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[13px] font-medium text-brand-900">${esc(tx.user_name)}</td>
       <td class="px-5 py-3.5"><span class="badge ${cfg.cls}">${cfg.label}</span></td>
-      <td class="px-5 py-3.5 text-[12px] text-slate-500 max-w-xs truncate">${esc(tx.desc)}</td>
+      <td class="px-5 py-3.5 text-[12px] text-slate-500 max-w-xs truncate">${esc(tx.description)}</td>
       <td class="px-5 py-3.5 text-[13px] font-semibold text-right ${isNeg ? 'text-red-500' : 'text-emerald-600'}">${isNeg ? '' : '+'}KES ${Math.abs(tx.amount).toLocaleString()}</td>
-      <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${tx.balance.toLocaleString()}</td>
+      <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${tx.balance_after.toLocaleString()}</td>
     </tr>`;
   }).join('');
 

@@ -1,0 +1,4 @@
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+Database initialized successfully.
+Server running at http://localhost:3000
+[MOCK] STK Push to 783244499 for KES 1000

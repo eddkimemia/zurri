@@ -61,6 +61,20 @@ CREATE TABLE withdrawals (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- 5. MPESA REQUESTS (For callback validation)
+CREATE TABLE mpesa_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    request_id TEXT NOT NULL UNIQUE, -- MerchantRequestID or ConversationID
+    user_id INTEGER DEFAULT NULL,
+    withdrawal_id INTEGER DEFAULT NULL,
+    type TEXT NOT NULL, -- 'stk_push', 'b2c'
+    amount DECIMAL(10, 2) NOT NULL,
+    status TEXT DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (withdrawal_id) REFERENCES withdrawals(id) ON DELETE CASCADE
+);
+
 -- INDEXES
 CREATE INDEX idx_users_phone ON users(phone);
 CREATE INDEX idx_users_referral_code ON users(referral_code);

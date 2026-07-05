@@ -698,7 +698,7 @@
   let CSRF_TOKEN = '';
 
   async function getCsrfToken() {
-    const res = await fetch('api/csrf_token.php');
+    const res = await fetch('/api/csrf-token');
     const data = await res.json();
     if (data.success) CSRF_TOKEN = data.csrf_token;
   }
@@ -707,23 +707,89 @@
 
   async function loadAppData() {
     try {
-      const statsRes = await fetch('api/user/stats.php');
+      const statsRes = await fetch('/api/user/stats');
       const stats = await statsRes.json();
       if (!stats.success) { window.location.href = 'auth.html'; return; }
       USER = stats.user;
 
-      const refRes = await fetch('api/user/referrals.php');
+      // Handle inactive user (pending payment)
+      if (USER.status === 'pending_payment') {
+          renderActivationUI();
+          return;
+      }
+
+      const refRes = await fetch('/api/user/referrals');
       const refData = await refRes.json();
       teamData = refData.referrals || [];
 
-      const txRes = await fetch('api/user/transactions.php');
+      const txRes = await fetch('/api/user/transactions');
       const txData = await txRes.json();
       transactionData = txData.transactions || [];
+
+      withdrawHistoryData = transactionData.filter(t => t.type === 'withdrawal');
 
       updateUI();
     } catch (err) {
       console.error('Failed to load app data', err);
     }
+  }
+
+  function renderActivationUI() {
+    document.querySelector('main').innerHTML = `
+      <div class="max-w-xl mx-auto mt-10">
+        <div class="dash-card p-8 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gold-50 flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="zap" class="w-8 h-8 text-gold-500"></i>
+          </div>
+          <h2 class="text-2xl font-semibold text-brand-900 mb-3">Activate Your Account</h2>
+          <p class="text-slate-500 font-light mb-8">To start earning commissions and accessing your dashboard, please complete the one-time membership payment of KES 1,000.</p>
+
+          <div class="bg-surface-50 border border-surface-200 rounded-xl p-5 mb-8 text-left">
+            <div class="flex justify-between mb-3"><span class="text-sm text-slate-500">Membership Fee</span><span class="text-sm font-semibold text-brand-900">KES 1,000</span></div>
+            <div class="flex justify-between mb-3"><span class="text-sm text-slate-500">Welcome Bonus</span><span class="text-sm font-semibold text-emerald-600">- KES 500 (Instant)</span></div>
+            <div class="h-px bg-surface-200 my-3"></div>
+            <div class="flex justify-between"><span class="text-base font-semibold text-brand-900">Net Cost</span><span class="text-base font-bold text-brand-800">KES 500</span></div>
+          </div>
+
+          <button id="activateBtn" onclick="initiateActivation()" class="cta-gold w-full text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 mb-4">
+            <i data-lucide="smartphone" class="w-5 h-5"></i>
+            Pay with M-Pesa
+          </button>
+
+          <p class="text-[11px] text-slate-400">An STK Push will be sent to <strong>+254 ${USER.phone}</strong>. Enter your M-Pesa PIN to complete the payment.</p>
+        </div>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+
+  async function initiateActivation() {
+    const btn = document.getElementById('activateBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline" viewBox="0 0 24 24">...</svg> Sending STK Push...';
+
+    try {
+      const res = await fetch('/api/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN }
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        // Wait for callback (in real app we might poll or use WebSockets)
+        btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> STK Sent - Waiting...';
+        setTimeout(() => location.reload(), 10000); // Simple reload after 10s to check status
+      } else {
+        showToast(data.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="smartphone" class="w-5 h-5"></i> Pay with M-Pesa';
+      }
+    } catch (err) {
+      showToast('Error initiating payment');
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="smartphone" class="w-5 h-5"></i> Pay with M-Pesa';
+    }
+    lucide.createIcons();
   }
 
   function updateUI() {
@@ -732,10 +798,25 @@
     // Update Stats
     document.querySelectorAll('.stat-card p.text-2xl').forEach((el, i) => {
       if (i === 0) el.textContent = 'KES ' + parseFloat(USER.balance).toLocaleString();
-      if (i === 1) el.textContent = 'KES ' + parseFloat(USER.total_earned - (USER.indirect_count * 150) - 500).toLocaleString(); // Simplified
-      if (i === 2) el.textContent = 'KES ' + parseFloat(USER.indirect_count * 150).toLocaleString();
+      if (i === 1) el.textContent = 'KES ' + parseFloat(USER.direct_earned).toLocaleString();
+      if (i === 2) el.textContent = 'KES ' + parseFloat(USER.indirect_earned).toLocaleString();
       if (i === 3) el.textContent = USER.total_team;
     });
+
+    // Update Referral Page Stats
+    const refStats = document.querySelectorAll('#page-referrals .bg-white p.text-2xl');
+    if (refStats.length >= 4) {
+      refStats[0].textContent = USER.direct_count || 0;
+      refStats[1].textContent = USER.indirect_count || 0;
+      refStats[2].textContent = 'KES ' + (USER.direct_earned || 0).toLocaleString();
+      refStats[3].textContent = 'KES ' + (USER.indirect_earned || 0).toLocaleString();
+
+      const refStatsSmall = document.querySelectorAll('#page-referrals .bg-white p.text-\\[10px\\]');
+      if (refStatsSmall.length >= 8) {
+          refStatsSmall[5].textContent = (USER.direct_count || 0) + ' × KES 350';
+          refStatsSmall[7].textContent = (USER.indirect_count || 0) + ' × KES 150';
+      }
+    }
 
     document.getElementById('refLink').textContent = 'zuriagency.co.ke/ref/' + USER.referral_code.toLowerCase();
 
@@ -963,7 +1044,7 @@
     spinner.classList.remove('hidden');
 
     try {
-        const response = await fetch('api/user/withdraw.php', {
+        const response = await fetch('/api/user/withdraw', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -994,14 +1075,14 @@
     const container = document.getElementById('withdrawHistory');
     container.innerHTML = withdrawHistoryData.map(w => `
       <div class="flex items-center gap-4 px-5 py-4 tx-row">
-        <div class="w-10 h-10 rounded-xl ${w.status === 'completed' ? 'bg-emerald-50' : 'bg-amber-50'} flex items-center justify-center flex-shrink-0">
-          <i data-lucide="${w.status === 'completed' ? 'check-circle' : 'clock'}" class="w-5 h-5 ${w.status === 'completed' ? 'text-emerald-500' : 'text-amber-500'}"></i>
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="arrow-up-right" class="w-5 h-5 text-red-500"></i>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-[13px] font-medium text-brand-900">KES ${w.amount.toLocaleString()}</p>
-          <p class="text-[11px] text-slate-400">${esc(w.phone)} • ${esc(w.date)}${w.note ? ' • ' + esc(w.note) : ''}</p>
+          <p class="text-[13px] font-medium text-brand-900">KES ${Math.abs(w.amount).toLocaleString()}</p>
+          <p class="text-[11px] text-slate-400">${esc(w.description)} • ${new Date(w.created_at).toLocaleDateString()}</p>
         </div>
-        <span class="badge ${w.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-amber-50 text-amber-700 border border-amber-100'} flex-shrink-0">${w.status === 'completed' ? 'Completed' : 'Pending'}</span>
+        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100 flex-shrink-0">Completed</span>
       </div>
     `).join('');
 
