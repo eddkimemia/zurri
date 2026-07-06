@@ -1,0 +1,20 @@
+{
+  "name": "zuri-agency-node",
+  "version": "1.0.0",
+  "description": "Production-ready Node.js backend for ZuriAgency",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/node_verify_flow.js"
+  },
+  "dependencies": {
+    "axios": "^1.18.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "sqlite3": "^5.1.6"
+  }
+}

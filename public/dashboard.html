@@ -186,7 +186,7 @@
             <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Total Balance</p>
             <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center"><i data-lucide="wallet" class="w-4 h-4 text-brand-500"></i></div>
           </div>
-          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 24,850</p>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">--</p>
           <div class="flex items-center gap-1 mt-2"><i data-lucide="trending-up" class="w-3 h-3 text-emerald-500"></i><span class="text-[11px] text-emerald-600 font-medium">+KES 3,500 this week</span></div>
         </div>
         <div class="stat-card gold bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
@@ -194,24 +194,24 @@
             <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Direct Earned</p>
             <div class="w-8 h-8 rounded-lg bg-gold-50 flex items-center justify-center"><i data-lucide="user-check" class="w-4 h-4 text-gold-500"></i></div>
           </div>
-          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 17,500</p>
-          <p class="text-[11px] text-slate-400 mt-2">50 direct referrals</p>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">--</p>
+          <p class="text-[11px] text-slate-400 mt-2">--</p>
         </div>
         <div class="stat-card green bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
           <div class="flex items-center justify-between mb-3">
             <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Upline Earned</p>
             <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><i data-lucide="git-branch" class="w-4 h-4 text-emerald-500"></i></div>
           </div>
-          <p class="text-2xl sm:text-3xl font-light text-brand-900">KES 7,350</p>
-          <p class="text-[11px] text-slate-400 mt-2">49 override commissions</p>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">--</p>
+          <p class="text-[11px] text-slate-400 mt-2">--</p>
         </div>
         <div class="stat-card purple bg-white rounded-xl border border-surface-200 p-4 sm:p-5">
           <div class="flex items-center justify-between mb-3">
             <p class="text-[11px] text-slate-400 uppercase tracking-wider font-medium">Total Team</p>
             <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center"><i data-lucide="users" class="w-4 h-4 text-purple-500"></i></div>
           </div>
-          <p class="text-2xl sm:text-3xl font-light text-brand-900">99</p>
-          <p class="text-[11px] text-slate-400 mt-2">50 direct + 49 indirect</p>
+          <p class="text-2xl sm:text-3xl font-light text-brand-900">--</p>
+          <p class="text-[11px] text-slate-400 mt-2">--</p>
         </div>
       </div>
 
@@ -385,12 +385,12 @@
         </div>
         <div class="bg-white rounded-xl border border-surface-200 p-4">
           <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">From Direct</p>
-          <p class="text-2xl font-light text-brand-900 mt-1">KES 17,500</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">--</p>
           <p class="text-[10px] text-slate-400 mt-1">50 × KES 350</p>
         </div>
         <div class="bg-white rounded-xl border border-surface-200 p-4">
           <p class="text-[10px] text-slate-400 uppercase tracking-wider font-medium">From Indirect</p>
-          <p class="text-2xl font-light text-brand-900 mt-1">KES 7,350</p>
+          <p class="text-2xl font-light text-brand-900 mt-1">--</p>
           <p class="text-[10px] text-slate-400 mt-1">49 × KES 150</p>
         </div>
       </div>
@@ -685,62 +685,151 @@
 <script>
   lucide.createIcons();
 
-  // ===== DATA =====
-  const BALANCE = 24850;
-  const teamData = [
-    { name:'Mary Ochieng', initials:'MO', type:'direct', earned:350, refs:3, date:'Mar 18, 2025', status:'active', color:'bg-pink-100 text-pink-700' },
-    { name:'Peter Mwangi', initials:'PM', type:'direct', earned:350, refs:5, date:'Mar 17, 2025', status:'active', color:'bg-blue-100 text-blue-700' },
-    { name:'Faith Wanjiku', initials:'FW', type:'direct', earned:350, refs:2, date:'Mar 16, 2025', status:'active', color:'bg-purple-100 text-purple-700' },
-    { name:'James Otieno', initials:'JO', type:'indirect', earned:150, refs:0, date:'Mar 16, 2025', status:'active', color:'bg-amber-100 text-amber-700' },
-    { name:'Grace Nyambura', initials:'GN', type:'direct', earned:350, refs:4, date:'Mar 15, 2025', status:'active', color:'bg-emerald-100 text-emerald-700' },
-    { name:'David Kiprop', initials:'DK', type:'indirect', earned:150, refs:1, date:'Mar 15, 2025', status:'active', color:'bg-cyan-100 text-cyan-700' },
-    { name:'Lucy Akinyi', initials:'LA', type:'direct', earned:350, refs:0, date:'Mar 14, 2025', status:'active', color:'bg-rose-100 text-rose-700' },
-    { name:'Samuel Karanja', initials:'SK', type:'indirect', earned:150, refs:2, date:'Mar 14, 2025', status:'active', color:'bg-indigo-100 text-indigo-700' },
-    { name:'Esther Njeri', initials:'EN', type:'direct', earned:350, refs:6, date:'Mar 13, 2025', status:'active', color:'bg-teal-100 text-teal-700' },
-    { name:'Kevin Musyoka', initials:'KM', type:'indirect', earned:150, refs:0, date:'Mar 12, 2025', status:'active', color:'bg-orange-100 text-orange-700' },
-    { name:'Ann Wairimu', initials:'AW', type:'direct', earned:350, refs:1, date:'Mar 11, 2025', status:'active', color:'bg-lime-100 text-lime-700' },
-    { name:'Brian Chege', initials:'BC', type:'direct', earned:350, refs:3, date:'Mar 10, 2025', status:'active', color:'bg-sky-100 text-sky-700' },
-  ];
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, s => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[s]));
+  }
 
-  const transactionData = [
-    { date:'Mar 18, 2025 14:32', desc:'Direct Commission — Mary Ochieng', type:'direct', amount:350, balance:24850 },
-    { date:'Mar 18, 2025 14:14', desc:'Upline Override — via Peter Mwangi', type:'upline', amount:150, balance:24500 },
-    { date:'Mar 18, 2025 11:05', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-5000, balance:24350 },
-    { date:'Mar 17, 2025 19:22', desc:'Direct Commission — Peter Mwangi', type:'direct', amount:350, balance:29350 },
-    { date:'Mar 17, 2025 16:40', desc:'Direct Commission — Peter Mwangi', type:'direct', amount:350, balance:29350 },
-    { date:'Mar 16, 2025 20:15', desc:'Direct Commission — Faith Wanjiku', type:'direct', amount:350, balance:29000 },
-    { date:'Mar 16, 2025 18:33', desc:'Upline Override — via Peter Mwangi', type:'upline', amount:150, balance:28650 },
-    { date:'Mar 16, 2025 15:10', desc:'Upline Override — via Mary Ochieng', type:'upline', amount:150, balance:28500 },
-    { date:'Mar 15, 2025 22:08', desc:'Direct Commission — Grace Nyambura', type:'direct', amount:350, balance:28350 },
-    { date:'Mar 15, 2025 19:45', desc:'Upline Override — via Grace Nyambura', type:'upline', amount:150, balance:28000 },
-    { date:'Mar 15, 2025 12:30', desc:'Upline Override — via Esther Njeri', type:'upline', amount:150, balance:27850 },
-    { date:'Mar 14, 2025 21:12', desc:'Direct Commission — Lucy Akinyi', type:'direct', amount:350, balance:27700 },
-    { date:'Mar 14, 2025 17:55', desc:'Upline Override — via David Kiprop', type:'upline', amount:150, balance:27350 },
-    { date:'Mar 14, 2025 09:20', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-5000, balance:27200 },
-    { date:'Mar 13, 2025 20:44', desc:'Direct Commission — Esther Njeri', type:'direct', amount:350, balance:32200 },
-    { date:'Mar 13, 2025 16:18', desc:'Upline Override — via Esther Njeri', type:'upline', amount:150, balance:31850 },
-    { date:'Mar 13, 2025 11:02', desc:'Upline Override — via Brian Chege', type:'upline', amount:150, balance:31700 },
-    { date:'Mar 12, 2025 23:15', desc:'Upline Override — via Samuel Karanja', type:'upline', amount:150, balance:31550 },
-    { date:'Mar 12, 2025 14:38', desc:'Direct Commission — Kevin Musyoka (Indirect)', type:'upline', amount:150, balance:31400 },
-    { date:'Mar 11, 2025 19:50', desc:'Direct Commission — Ann Wairimu', type:'direct', amount:350, balance:31250 },
-    { date:'Mar 11, 2025 10:22', desc:'Upline Override — via Ann Wairimu', type:'upline', amount:150, balance:30900 },
-    { date:'Mar 10, 2025 21:33', desc:'Direct Commission — Brian Chege', type:'direct', amount:350, balance:30750 },
-    { date:'Mar 10, 2025 15:07', desc:'Withdrawal to M-Pesa', type:'withdrawal', amount:-2500, balance:30400 },
-    { date:'Mar 9, 2025 22:41', desc:'Upline Override — via Faith Wanjiku', type:'upline', amount:150, balance:32900 },
-    { date:'Mar 9, 2025 18:16', desc:'Upline Override — via Grace Nyambura', type:'upline', amount:150, balance:32750 },
-    { date:'Mar 8, 2025 20:55', desc:'Direct Commission — Samuel Karanja (Indirect)', type:'upline', amount:150, balance:32600 },
-    { date:'Oct 15, 2024 10:00', desc:'Welcome Bonus — New Member', type:'bonus', amount:500, balance:500 },
-  ];
+  // ===== STATE =====
+  let USER = null;
+  let teamData = [];
+  let CSRF_TOKEN = '';
 
-  const withdrawHistoryData = [
-    { date:'Mar 18, 2025 11:05', amount:5000, phone:'+254 712 345 678', status:'completed', note:'Personal use' },
-    { date:'Mar 14, 2025 09:20', amount:5000, phone:'+254 712 345 678', status:'completed', note:'Rent' },
-    { date:'Mar 10, 2025 15:07', amount:2500, phone:'+254 712 345 678', status:'completed', note:'Savings' },
-    { date:'Feb 28, 2025 12:30', amount:5000, phone:'+254 712 345 678', status:'completed', note:'' },
-    { date:'Feb 15, 2025 09:15', amount:1000, phone:'+254 712 345 678', status:'completed', note:'Airtime' },
-    { date:'Jan 30, 2025 16:45', amount:5000, phone:'+254 712 345 678', status:'completed', note:'School fees' },
-  ];
+  async function getCsrfToken() {
+    const res = await fetch('/api/csrf-token');
+    const data = await res.json();
+    if (data.success) CSRF_TOKEN = data.csrf_token;
+  }
+  let transactionData = [];
+  let withdrawHistoryData = [];
 
+  async function loadAppData() {
+    try {
+      const statsRes = await fetch('/api/user/stats');
+      const stats = await statsRes.json();
+      if (!stats.success) { window.location.href = 'auth.html'; return; }
+      USER = stats.user;
+
+      // Handle inactive user (pending payment)
+      if (USER.status === 'pending_payment') {
+          renderActivationUI();
+          return;
+      }
+
+      const refRes = await fetch('/api/user/referrals');
+      const refData = await refRes.json();
+      teamData = refData.referrals || [];
+
+      const txRes = await fetch('/api/user/transactions');
+      const txData = await txRes.json();
+      transactionData = txData.transactions || [];
+
+      withdrawHistoryData = transactionData.filter(t => t.type === 'withdrawal');
+
+      updateUI();
+    } catch (err) {
+      console.error('Failed to load app data', err);
+    }
+  }
+
+  function renderActivationUI() {
+    document.querySelector('main').innerHTML = `
+      <div class="max-w-xl mx-auto mt-10">
+        <div class="dash-card p-8 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gold-50 flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="zap" class="w-8 h-8 text-gold-500"></i>
+          </div>
+          <h2 class="text-2xl font-semibold text-brand-900 mb-3">Activate Your Account</h2>
+          <p class="text-slate-500 font-light mb-8">To start earning commissions and accessing your dashboard, please complete the one-time membership payment of KES 1,000.</p>
+
+          <div class="bg-surface-50 border border-surface-200 rounded-xl p-5 mb-8 text-left">
+            <div class="flex justify-between mb-3"><span class="text-sm text-slate-500">Membership Fee</span><span class="text-sm font-semibold text-brand-900">KES 1,000</span></div>
+            <div class="flex justify-between mb-3"><span class="text-sm text-slate-500">Welcome Bonus</span><span class="text-sm font-semibold text-emerald-600">- KES 500 (Instant)</span></div>
+            <div class="h-px bg-surface-200 my-3"></div>
+            <div class="flex justify-between"><span class="text-base font-semibold text-brand-900">Net Cost</span><span class="text-base font-bold text-brand-800">KES 500</span></div>
+          </div>
+
+          <button id="activateBtn" onclick="initiateActivation()" class="cta-gold w-full text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 mb-4">
+            <i data-lucide="smartphone" class="w-5 h-5"></i>
+            Pay with M-Pesa
+          </button>
+
+          <p class="text-[11px] text-slate-400">An STK Push will be sent to <strong>+254 ${USER.phone}</strong>. Enter your M-Pesa PIN to complete the payment.</p>
+        </div>
+      </div>
+    `;
+    lucide.createIcons();
+  }
+
+  async function initiateActivation() {
+    const btn = document.getElementById('activateBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline" viewBox="0 0 24 24">...</svg> Sending STK Push...';
+
+    try {
+      const res = await fetch('/api/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN }
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message);
+        // Wait for callback (in real app we might poll or use WebSockets)
+        btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> STK Sent - Waiting...';
+        setTimeout(() => location.reload(), 10000); // Simple reload after 10s to check status
+      } else {
+        showToast(data.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="smartphone" class="w-5 h-5"></i> Pay with M-Pesa';
+      }
+    } catch (err) {
+      showToast('Error initiating payment');
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="smartphone" class="w-5 h-5"></i> Pay with M-Pesa';
+    }
+    lucide.createIcons();
+  }
+
+  function updateUI() {
+    if (!USER) return;
+
+    // Update Stats
+    document.querySelectorAll('.stat-card p.text-2xl').forEach((el, i) => {
+      if (i === 0) el.textContent = 'KES ' + parseFloat(USER.balance).toLocaleString();
+      if (i === 1) el.textContent = 'KES ' + parseFloat(USER.direct_earned).toLocaleString();
+      if (i === 2) el.textContent = 'KES ' + parseFloat(USER.indirect_earned).toLocaleString();
+      if (i === 3) el.textContent = USER.total_team;
+    });
+
+    // Update Referral Page Stats
+    const refStats = document.querySelectorAll('#page-referrals .bg-white p.text-2xl');
+    if (refStats.length >= 4) {
+      refStats[0].textContent = USER.direct_count || 0;
+      refStats[1].textContent = USER.indirect_count || 0;
+      refStats[2].textContent = 'KES ' + (USER.direct_earned || 0).toLocaleString();
+      refStats[3].textContent = 'KES ' + (USER.indirect_earned || 0).toLocaleString();
+
+      const refStatsSmall = document.querySelectorAll('#page-referrals .bg-white p.text-\\[10px\\]');
+      if (refStatsSmall.length >= 8) {
+          refStatsSmall[5].textContent = (USER.direct_count || 0) + ' × KES 350';
+          refStatsSmall[7].textContent = (USER.indirect_count || 0) + ' × KES 150';
+      }
+    }
+
+    document.getElementById('refLink').textContent = 'zuriagency.co.ke/ref/' + USER.referral_code.toLowerCase();
+
+    // User info in top bar & profile
+    document.querySelectorAll('.font-semibold.text-brand-900.leading-none, #profName').forEach(el => {
+      if (el.tagName === 'INPUT') el.value = USER.name;
+      else el.textContent = USER.name;
+    });
+
+    renderTeamTable('all');
+    renderTransactions('all');
+    renderWithdrawHistory();
+  }
 
   // ===== SIDEBAR TOGGLE =====
   function toggleSidebar() {
@@ -834,30 +923,33 @@
   function renderTeamTable(filter) {
     const tbody = document.getElementById('teamTableBody');
     let data = teamData;
-    if (filter === 'direct') data = teamData.filter(t => t.type === 'direct');
-    if (filter === 'indirect') data = teamData.filter(t => t.type === 'indirect');
+    if (filter === 'direct') data = teamData.filter(t => t.level == 1);
+    if (filter === 'indirect') data = teamData.filter(t => t.level == 2);
 
-    tbody.innerHTML = data.map(m => `
+    tbody.innerHTML = data.map(m => {
+        const initials = m.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        return `
       <tr class="tx-row border-b border-surface-50">
         <td class="px-5 py-3.5">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg ${m.color} flex items-center justify-center text-[10px] font-bold flex-shrink-0">${m.initials}</div>
-            <span class="text-[13px] font-medium text-brand-900">${m.name}</span>
+            <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center text-[10px] font-bold flex-shrink-0">${initials}</div>
+            <span class="text-[13px] font-medium text-brand-900">${esc(m.name)}</span>
           </div>
         </td>
         <td class="px-5 py-3.5">
-          <span class="badge ${m.type === 'direct' ? 'bg-brand-50 text-brand-700 border border-brand-100' : 'bg-gold-50 text-gold-700 border border-gold-100'}">${m.type === 'direct' ? 'Direct' : 'Indirect'}</span>
+          <span class="badge ${m.level == 1 ? 'bg-brand-50 text-brand-700 border border-brand-100' : 'bg-gold-50 text-gold-700 border border-gold-100'}">${m.level == 1 ? 'Direct' : 'Indirect'}</span>
         </td>
-        <td class="px-5 py-3.5 text-[13px] font-semibold ${m.type === 'direct' ? 'text-brand-800' : 'text-gold-700'}">KES ${m.earned.toLocaleString()}</td>
-        <td class="px-5 py-3.5 text-[13px] text-slate-500">${m.refs}</td>
-        <td class="px-5 py-3.5 text-[12px] text-slate-400">${m.date}</td>
+        <td class="px-5 py-3.5 text-[13px] font-semibold ${m.level == 1 ? 'text-brand-800' : 'text-gold-700'}">KES ${parseFloat(m.commission_amount).toLocaleString()}</td>
+        <td class="px-5 py-3.5 text-[13px] text-slate-500">—</td>
+        <td class="px-5 py-3.5 text-[12px] text-slate-400">${new Date(m.created_at).toLocaleDateString()}</td>
         <td class="px-5 py-3.5"><span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span></td>
       </tr>
-    `).join('');
+    `; }).join('');
 
     if (data.length === 0) {
       tbody.innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-slate-400">No members found for this filter.</td></tr>';
     }
+    lucide.createIcons();
   }
 
   function filterTeam() {
@@ -869,25 +961,28 @@
   function renderTransactions(filter) {
     const tbody = document.getElementById('txTableBody');
     let data = transactionData;
-    if (filter !== 'all') data = transactionData.filter(t => t.type === filter);
+    if (filter === 'direct') data = transactionData.filter(t => t.type === 'direct_commission');
+    else if (filter === 'upline') data = transactionData.filter(t => t.type === 'upline_override');
+    else if (filter === 'bonus') data = transactionData.filter(t => t.type === 'welcome_bonus');
+    else if (filter !== 'all') data = transactionData.filter(t => t.type === filter);
 
     const typeConfig = {
-      direct: { label:'Direct', class:'bg-brand-50 text-brand-700 border border-brand-100' },
-      upline: { label:'Upline', class:'bg-gold-50 text-gold-700 border border-gold-100' },
-      bonus: { label:'Bonus', class:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
+      direct_commission: { label:'Direct', class:'bg-brand-50 text-brand-700 border border-brand-100' },
+      upline_override: { label:'Upline', class:'bg-gold-50 text-gold-700 border border-gold-100' },
+      welcome_bonus: { label:'Bonus', class:'bg-emerald-50 text-emerald-700 border border-emerald-100' },
       withdrawal: { label:'Withdrawal', class:'bg-red-50 text-red-600 border border-red-100' },
     };
 
     tbody.innerHTML = data.map(tx => {
-      const cfg = typeConfig[tx.type] || typeConfig.direct;
+      const cfg = typeConfig[tx.type] || { label: tx.type, class: 'bg-slate-50 text-slate-700' };
       const isNeg = tx.amount < 0;
       return `
         <tr class="tx-row border-b border-surface-50">
-          <td class="px-5 py-3.5 text-[12px] text-slate-400 whitespace-nowrap">${tx.date}</td>
-          <td class="px-5 py-3.5 text-[13px] text-brand-900 font-medium">${tx.desc}</td>
+          <td class="px-5 py-3.5 text-[12px] text-slate-400 whitespace-nowrap">${new Date(tx.created_at).toLocaleString()}</td>
+          <td class="px-5 py-3.5 text-[13px] text-brand-900 font-medium">${esc(tx.description)}</td>
           <td class="px-5 py-3.5"><span class="badge ${cfg.class}">${cfg.label}</span></td>
           <td class="px-5 py-3.5 text-[13px] font-semibold text-right ${isNeg ? 'text-red-500' : 'text-emerald-600'}">${isNeg ? '' : '+'}KES ${Math.abs(tx.amount).toLocaleString()}</td>
-          <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${tx.balance.toLocaleString()}</td>
+          <td class="px-5 py-3.5 text-[13px] text-slate-500 text-right font-medium">KES ${parseFloat(tx.balance_after).toLocaleString()}</td>
         </tr>
       `;
     }).join('');
@@ -916,19 +1011,20 @@
 
   document.getElementById('withdrawAmount')?.addEventListener('input', updateWithdrawSummary);
 
-  function handleWithdraw(e) {
+  async function handleWithdraw(e) {
     e.preventDefault();
-    const amt = parseInt(document.getElementById('withdrawAmount').value) || 0;
+    const amount = parseInt(document.getElementById('withdrawAmount').value) || 0;
+    const note = document.getElementById('withdrawNote').value;
     const errEl = document.getElementById('withdrawAmountError');
 
-    if (!amt || amt < 500) {
+    if (!amount || amount < 500) {
       errEl.querySelector('span').textContent = 'Minimum withdrawal amount is KES 500';
       errEl.classList.add('visible');
       document.getElementById('withdrawAmount').classList.add('error');
       return;
     }
-    if (amt > BALANCE) {
-      errEl.querySelector('span').textContent = 'Insufficient balance. Your balance is KES ' + BALANCE.toLocaleString();
+    if (amount > USER.balance) {
+      errEl.querySelector('span').textContent = 'Insufficient balance. Your balance is KES ' + parseFloat(USER.balance).toLocaleString();
       errEl.classList.add('visible');
       document.getElementById('withdrawAmount').classList.add('error');
       return;
@@ -943,37 +1039,50 @@
     const spinner = document.getElementById('withdrawSpinner');
 
     btn.disabled = true;
-    btn.style.opacity = '0.7';
-    btnText.textContent = 'Processing withdrawal...';
+    btnText.textContent = 'Processing...';
     btnIcon.classList.add('hidden');
     spinner.classList.remove('hidden');
 
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      btnText.textContent = 'Withdraw to M-Pesa';
-      btnIcon.classList.remove('hidden');
-      spinner.classList.add('hidden');
-      document.getElementById('withdrawAmount').value = '';
-      updateWithdrawSummary();
-
-      showToast('KES ' + amt.toLocaleString() + ' sent to your M-Pesa successfully!');
-      renderWithdrawHistory();
-    }, 3000);
+    try {
+        const response = await fetch('/api/user/withdraw', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': CSRF_TOKEN
+            },
+            body: JSON.stringify({ amount, note })
+        });
+        const result = await response.json();
+        if (result.success) {
+            showToast('Withdrawal request submitted successfully!');
+            loadAppData(); // Refresh stats
+            document.getElementById('withdrawAmount').value = '';
+            updateWithdrawSummary();
+        } else {
+            showToast(result.message);
+        }
+    } catch (err) {
+        showToast('Failed to process withdrawal');
+    } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Withdraw to M-Pesa';
+        btnIcon.classList.remove('hidden');
+        spinner.classList.add('hidden');
+    }
   }
 
   function renderWithdrawHistory() {
     const container = document.getElementById('withdrawHistory');
     container.innerHTML = withdrawHistoryData.map(w => `
       <div class="flex items-center gap-4 px-5 py-4 tx-row">
-        <div class="w-10 h-10 rounded-xl ${w.status === 'completed' ? 'bg-emerald-50' : 'bg-amber-50'} flex items-center justify-center flex-shrink-0">
-          <i data-lucide="${w.status === 'completed' ? 'check-circle' : 'clock'}" class="w-5 h-5 ${w.status === 'completed' ? 'text-emerald-500' : 'text-amber-500'}"></i>
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="arrow-up-right" class="w-5 h-5 text-red-500"></i>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-[13px] font-medium text-brand-900">KES ${w.amount.toLocaleString()}</p>
-          <p class="text-[11px] text-slate-400">${w.phone} • ${w.date}${w.note ? ' • ' + w.note : ''}</p>
+          <p class="text-[13px] font-medium text-brand-900">KES ${Math.abs(w.amount).toLocaleString()}</p>
+          <p class="text-[11px] text-slate-400">${esc(w.description)} • ${new Date(w.created_at).toLocaleDateString()}</p>
         </div>
-        <span class="badge ${w.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-amber-50 text-amber-700 border border-amber-100'} flex-shrink-0">${w.status === 'completed' ? 'Completed' : 'Pending'}</span>
+        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-100 flex-shrink-0">Completed</span>
       </div>
     `).join('');
 
@@ -1034,10 +1143,10 @@
 
 
   // ===== INIT =====
-  renderTeamTable('all');
-  renderTransactions('all');
-  renderWithdrawHistory();
-  updateWithdrawSummary();
+  (async () => {
+    await getCsrfToken();
+    loadAppData();
+  })();
 </script>
 
 </body>
