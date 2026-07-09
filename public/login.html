@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In — ZuriAgency</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD',
+              400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB', 700: '#1D4ED8',
+              800: '#1E40AF', 900: '#0F2B5B',
+            },
+            gold: {
+              50: '#FFFBEB', 100: '#FEF3C7', 200: '#FDE68A', 300: '#FCD34D',
+              400: '#FBBF24', 500: '#D4A843', 600: '#C9952B', 700: '#B45309',
+            },
+            surface: {
+              0: '#FFFFFF', 50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0', 300: '#CBD5E1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #F8FAFC; color: #0F172A; overflow-x: hidden; }
+
+    @keyframes globalFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    body { animation: globalFadeIn 0.6s ease-out forwards; }
+
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+    .animate-float { animation: float 5s ease-in-out infinite; }
+    @keyframes floatAlt { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+    .animate-float-alt { animation: floatAlt 6s ease-in-out infinite; }
+
+    @keyframes pulse-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.7; } }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+    @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+    .animate-ping-slow { animation: ping 2s cubic-bezier(0,0,0.2,1) infinite; }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .slide-in-right { animation: slideInRight 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .scale-in { animation: scaleIn 0.3s ease-out forwards; }
+
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #C9952B, #D4A843, #FBBF24);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .dot-grid {
+      background-image: radial-gradient(circle, #CBD5E1 0.8px, transparent 0.8px);
+      background-size: 24px 24px;
+    }
+
+    .hero-orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+    }
+
+    .nav-blur {
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: rgba(248,250,252,0.85); border-bottom: 1px solid #E2E8F0;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      box-shadow: 0 4px 20px rgba(37,99,235,0.3), 0 1px 3px rgba(37,99,235,0.2);
+      transition: all 0.3s ease;
+    }
+    .cta-primary:hover {
+      box-shadow: 0 8px 35px rgba(37,99,235,0.4), 0 2px 6px rgba(37,99,235,0.25);
+      transform: translateY(-2px);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px 12px 48px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: #0F172A;
+      background: #FFFFFF;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .form-input.error {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .password-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #94A3B8; transition: color 0.2s;
+    }
+
+    .error-message {
+      font-size: 12px; color: #EF4444; margin-top: 6px; display: none;
+      align-items: center; gap: 4px;
+    }
+    .error-message.visible { display: flex; }
+
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .mobile-menu.open { max-height: 500px; }
+
+    .mpesa-badge {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    }
+
+    .card-shine {
+      position: relative; overflow: hidden;
+    }
+    .card-shine::before {
+      content: '';
+      position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(255,255,255,0.3) 50%,
+        transparent 60%
+      );
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+    .card-shine:hover::before { transform: translateX(100%); }
+  </style>
+</head>
+<body class="font-inter antialiased">
+
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 flex items-center justify-center shadow-md">
+          <span class="text-white font-bold text-xs">Z</span>
+        </div>
+        <span class="text-brand-900 font-semibold text-sm tracking-tight">ZuriAgency<span class="text-brand-600">.co.ke</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="index.html" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">Home</a>
+        <a href="how-it-works.html" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">How It Works</a>
+        <a href="index.html#earnings" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">Earnings</a>
+        <a href="index.html#faq" class="text-[13px] font-medium text-slate-500 hover:text-brand-700 transition-colors duration-150">FAQ</a>
+      </div>
+      <button id="mobileToggle" class="md:hidden text-slate-500 hover:text-brand-700 transition-colors">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="mobile-menu md:hidden bg-white border-t border-surface-200">
+      <div class="px-4 py-4 flex flex-col gap-3">
+        <a href="index.html" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">Home</a>
+        <a href="how-it-works.html" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">How It Works</a>
+        <a href="index.html#earnings" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">Earnings</a>
+        <a href="index.html#faq" class="text-sm text-slate-600 hover:text-brand-700 py-2 transition-colors mobile-link">FAQ</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <div class="hero-orb w-[500px] h-[500px] bg-brand-200 top-20 -left-40 opacity-40 animate-pulse-glow"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-gold-100 top-40 -right-32 opacity-50 animate-pulse-glow" style="animation-delay: 2s;"></div>
+    <div class="absolute inset-0 dot-grid opacity-40 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 py-12">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+        <div class="hidden lg:block">
+          <div class="fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-surface-200 shadow-sm mb-8">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span class="text-[12px] font-medium text-slate-600">5,000+ Kenyans earning right now</span>
+            </div>
+
+            <h1 class="text-4xl xl:text-5xl font-extralight leading-[1.08] tracking-tight text-brand-900 mb-6">
+              Welcome Back to<br />
+              <span class="gradient-text-gold font-light">ZuriAgency</span>
+            </h1>
+
+            <p class="text-slate-500 text-[16px] font-light leading-[1.8] mb-10 max-w-md">
+              Log in to your dashboard to track your earnings, manage your referrals, and request instant M-Pesa payouts.
+            </p>
+
+            <div class="space-y-4 mb-10">
+              <div class="flex items-start gap-4 p-4 bg-white rounded-xl border border-surface-200 shadow-sm card-shine">
+                <div class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="zap" class="w-5 h-5 text-brand-600"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-semibold text-brand-900 mb-0.5">Instant M-Pesa Payouts</h3>
+                  <p class="text-[13px] text-slate-500 font-light leading-relaxed">Every commission sent directly to your phone. No waiting, no minimums.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto">
+          <div class="bg-white rounded-2xl border border-surface-200 shadow-lg shadow-slate-200/50 overflow-hidden scale-in">
+
+            <div class="relative px-6 pt-6">
+              <div class="flex bg-surface-50 rounded-xl p-1 relative">
+                <a href="login.html" class="relative z-10 flex-1 py-2.5 text-[13px] font-semibold text-brand-700 bg-white rounded-lg shadow-sm text-center">
+                  Log In
+                </a>
+                <a href="register.html" class="relative z-10 flex-1 py-2.5 text-[13px] font-medium text-slate-400 rounded-lg transition-colors duration-200 text-center">
+                  Create Account
+                </a>
+              </div>
+            </div>
+
+            <div id="loginPanel" class="form-panel active">
+              <div class="p-6 slide-in-right">
+                <div class="mb-6">
+                  <h2 class="text-xl font-semibold text-brand-900 mb-1">Welcome back</h2>
+                  <p class="text-[13px] text-slate-500 font-light">Log in to access your dashboard and earnings.</p>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+                  <div class="mb-4">
+                    <label class="block text-[12px] font-semibold text-slate-600 uppercase tracking-wider mb-2">M-Pesa Phone Number</label>
+                    <div class="relative">
+                      <div class="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-slate-400"></i>
+                        <span class="text-[13px] font-medium text-slate-500">+254</span>
+                      </div>
+                      <input type="tel" id="loginPhone" class="form-input" style="padding-left: 90px;" placeholder="7XX XXX XXX" maxlength="9" autocomplete="tel" />
+                    </div>
+                    <div id="loginPhoneError" class="error-message">
+                      <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                      <span>Please enter a valid phone number</span>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label class="block text-[12px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Password</label>
+                    <div class="relative">
+                      <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                      <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" autocomplete="current-password" />
+                      <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    <div id="loginPasswordError" class="error-message">
+                      <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                      <span>Password is required</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" class="w-4 h-4 rounded border-surface-300 text-brand-600 focus:ring-brand-500 cursor-pointer" />
+                      <span class="text-[13px] text-slate-500 font-light">Remember me</span>
+                    </label>
+                    <a href="#" class="text-[13px] text-brand-600 hover:text-brand-700 font-medium transition-colors" onclick="showForgotPassword(event)">Forgot password?</a>
+                  </div>
+
+                  <button type="submit" id="loginBtn" class="cta-primary w-full text-white text-[14px] font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+                    <span id="loginBtnText">Log In to Dashboard</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4" id="loginBtnIcon"></i>
+                    <svg id="loginSpinner" class="hidden animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                  </button>
+                </form>
+
+                <div class="mt-5 flex items-center gap-3 bg-green-50 border border-green-100 rounded-xl p-3.5">
+                  <div class="w-9 h-9 rounded-lg mpesa-badge flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="smartphone" class="w-4 h-4 text-white"></i>
+                  </div>
+                  <p class="text-[12px] text-green-800 font-light leading-relaxed">New to ZuriAgency? You'll need to register first. Your M-Pesa number becomes your account ID.</p>
+                </div>
+              </div>
+            </div>
+
+            <div id="forgotPanel" class="form-panel">
+              <div class="p-6 slide-in-right">
+                <button onclick="hideForgotPassword()" class="flex items-center gap-1.5 text-[13px] text-brand-600 font-medium hover:text-brand-700 transition-colors mb-6">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  Back to login
+                </button>
+
+                <div class="mb-6">
+                  <div class="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-4">
+                    <i data-lucide="key" class="w-7 h-7 text-brand-600"></i>
+                  </div>
+                  <h2 class="text-xl font-semibold text-brand-900 mb-1">Reset your password</h2>
+                  <p class="text-[13px] text-slate-500 font-light">Enter your M-Pesa number and we'll send you a reset code via SMS.</p>
+                </div>
+
+                <form id="forgotForm" onsubmit="handleForgot(event)" novalidate>
+                  <div class="mb-5">
+                    <label class="block text-[12px] font-semibold text-slate-600 uppercase tracking-wider mb-2">M-Pesa Phone Number</label>
+                    <div class="relative">
+                      <div class="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-slate-400"></i>
+                        <span class="text-[13px] font-medium text-slate-500">+254</span>
+                      </div>
+                      <input type="tel" id="forgotPhone" class="form-input" style="padding-left: 90px;" placeholder="7XX XXX XXX" maxlength="9" />
+                    </div>
+                    <div id="forgotPhoneError" class="error-message">
+                      <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                      <span>Please enter a valid phone number</span>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="cta-primary w-full text-white text-[14px] font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+                    Send Reset Code
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div id="cardFooter" class="px-6 py-4 bg-surface-50 border-t border-surface-100 flex items-center justify-center gap-4">
+              <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                <i data-lucide="lock" class="w-3 h-3"></i>
+                <span>SSL Encrypted</span>
+              </div>
+              <div class="w-px h-3 bg-surface-200"></div>
+              <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                <i data-lucide="shield-check" class="w-3 h-3"></i>
+                <span>Secure Platform</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons();
+
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    mobileToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+    });
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i data-lucide="eye-off" class="w-4 h-4"></i>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>';
+      }
+      lucide.createIcons();
+    }
+
+    function showForgotPassword(e) {
+      if (e) e.preventDefault();
+      document.getElementById('loginPanel').classList.remove('active');
+      document.getElementById('forgotPanel').classList.add('active');
+    }
+
+    function hideForgotPassword() {
+      document.getElementById('forgotPanel').classList.remove('active');
+      document.getElementById('loginPanel').classList.add('active');
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      if (msg) el.querySelector('span').textContent = msg;
+      el.classList.add('visible');
+      const input = el.previousElementSibling?.querySelector?.('input') || el.parentElement.querySelector('input');
+      if (input) input.classList.add('error');
+    }
+
+    function hideError(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('visible');
+      const input = el.previousElementSibling?.querySelector?.('input') || el.parentElement.querySelector('input');
+      if (input) input.classList.remove('error');
+    }
+
+    function validatePhone(phone) {
+      const cleaned = phone.replace(/\s/g, '');
+      return /^7\d{8}$/.test(cleaned);
+    }
+
+    document.querySelectorAll('input[type="tel"]').forEach(input => {
+      input.addEventListener('input', function () {
+        let val = this.value.replace(/\D/g, '');
+        if (val.length > 9) val = val.slice(0, 9);
+        if (val.length > 3 && val.length <= 6) {
+          this.value = val.slice(0, 3) + ' ' + val.slice(3);
+        } else if (val.length > 6) {
+          this.value = val.slice(0, 3) + ' ' + val.slice(3, 6) + ' ' + val.slice(6);
+        } else {
+          this.value = val;
+        }
+      });
+    });
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const phone = document.getElementById('loginPhone').value.replace(/\s/g, '');
+      const password = document.getElementById('loginPassword').value;
+      let valid = true;
+
+      if (!validatePhone(phone)) { showError('loginPhoneError'); valid = false; } else { hideError('loginPhoneError'); }
+      if (!password) { showError('loginPasswordError'); valid = false; } else { hideError('loginPasswordError'); }
+
+      if (!valid) return;
+
+      const btn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('loginBtnText');
+      const btnIcon = document.getElementById('loginBtnIcon');
+      const spinner = document.getElementById('loginSpinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Logging in...';
+      btnIcon.classList.add('hidden');
+      spinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, password })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          window.location.href = (result.user.phone === '700000000') ? 'admin/dashboard.html' : 'dashboard.html';
+        } else {
+          showNotification(result.message, 'error');
+        }
+      } catch (err) {
+        showNotification('An error occurred. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Log In to Dashboard';
+        btnIcon.classList.remove('hidden');
+        spinner.classList.add('hidden');
+      }
+    }
+
+    function handleForgot(e) {
+      e.preventDefault();
+      const phone = document.getElementById('forgotPhone').value.replace(/\s/g, '');
+      if (!validatePhone(phone)) { showError('forgotPhoneError'); return; }
+      hideError('forgotPhoneError');
+      showNotification('Reset code sent to +254 ' + phone + ' via SMS', 'success');
+    }
+
+    function showNotification(message, type) {
+      const existing = document.getElementById('toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = `fixed top-20 right-4 z-[100] max-w-sm w-full shadow-lg rounded-xl border p-4 flex items-start gap-3 scale-in ${
+        type === 'success' ? 'bg-white border-emerald-200' : 'bg-white border-red-200'
+      }`;
+      toast.innerHTML = `
+        <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-5 h-5 ${type === 'success' ? 'text-emerald-500' : 'text-red-500'} flex-shrink-0 mt-0.5"></i>
+        <p class="text-sm text-slate-700 font-light flex-1">${message}</p>
+        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      `;
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => {
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

@@ -166,7 +166,7 @@
             <p class="text-[12px] font-semibold text-brand-900 leading-none">John Kamau</p>
             <p class="text-[10px] text-slate-400">+254 712 345 678</p>
           </div>
-          <button onclick="window.location.href='auth.html'" class="ml-2 w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
+          <button onclick="handleLogout()" class="ml-2 w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
             <i data-lucide="log-out" class="w-4 h-4 text-slate-400"></i>
           </button>
         </div>
@@ -709,7 +709,7 @@
     try {
       const statsRes = await fetch('/api/user/stats');
       const stats = await statsRes.json();
-      if (!stats.success) { window.location.href = 'auth.html'; return; }
+      if (!stats.success) { window.location.href = 'login.html'; return; }
       USER = stats.user;
 
       // Handle inactive user (pending payment)
@@ -886,9 +886,21 @@
 
   function showToast(message) {
     const toast = document.getElementById('copyToast');
-    document.getElementById('copyToastText').textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+    const toastText = document.getElementById('copyToastText');
+    if (toastText) toastText.textContent = message;
+    if (toast) {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await fetch('/api/logout');
+      window.location.href = 'login.html';
+    } catch (err) {
+      window.location.href = 'login.html';
+    }
   }
 
 

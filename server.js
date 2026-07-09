@@ -1,8 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const db = require('./src/db');
 const AuthService = require('./src/services/authService');
@@ -14,11 +18,24 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // Middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'", "cdn.tailwindcss.com", "unpkg.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdn.tailwindcss.com"],
+      "font-src": ["'self'", "fonts.gstatic.com"],
+      "img-src": ["'self'", "data:", "https:"]
+    }
+  }
+}));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
+  store: new SQLiteStore({ db: 'sessions.db', dir: './' }),
   secret: process.env.SESSION_SECRET || 'zuri-agency-dev-secret-998877',
   resave: false,
   saveUninitialized: false,
@@ -51,6 +68,13 @@ const generateCsrfToken = (req) => {
   return req.session.csrf_token;
 };
 
+// Rate Limiting
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // limit each IP to 20 requests per windowMs
+  message: { success: false, message: 'Too many requests, please try again later.' }
+});
+
 // Auth Middleware
 const isAuthenticated = (req, res, next) => {
   if (req.session.user_id) {
@@ -75,7 +99,7 @@ app.get('/api/csrf-token', (req, res) => {
   }
 });
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', authLimiter, async (req, res) => {
   const { name, phone, email, county, password, referral_code } = req.body;
   try {
     const result = await AuthService.register(name, phone, email, county, password, referral_code);
@@ -110,7 +134,7 @@ app.get('/api/admin/transactions', isAuthenticated, isAdmin, async (req, res) =>
   }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', authLimiter, async (req, res) => {
   const { phone, password } = req.body;
   try {
     const result = await AuthService.login(phone, password);
@@ -366,6 +390,32 @@ app.post('/api/admin/withdrawals', isAuthenticated, isAdmin, csrfProtection, asy
 
 // Catch-all to serve index.html for unknown routes (optional, but good for SPAs)
 // app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+// Redirect legacy auth.html to login.html
+app.get('/auth.html', (req, res) => {
+  res.redirect('/login.html');
+});
+
+// 404 Handler
+app.use((req, res) => {
+  if (req.accepts('html')) {
+    res.status(404).sendFile(path.join(__dirname, 'public', 'index.html'));
+    return;
+  }
+  res.status(404).json({ success: false, message: 'Resource not found' });
+});
+
+// Centralized Error Handler
+app.use((err, req, res, next) => {
+  console.error(`[Error] ${err.stack}`);
+  const status = err.status || 500;
+  res.status(status).json({
+    success: false,
+    message: process.env.NODE_ENV === 'production'
+      ? 'An internal server error occurred.'
+      : err.message
+  });
+});
 
 // Start Server
 db.initDb().then(() => {

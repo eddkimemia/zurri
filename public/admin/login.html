@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — ZuriAgency</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE', 300: '#93C5FD',
+              400: '#60A5FA', 500: '#3B82F6', 600: '#2563EB', 700: '#1D4ED8',
+              800: '#1E40AF', 900: '#0F2B5B',
+            },
+            surface: {
+              0: '#FFFFFF', 50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0', 300: '#CBD5E1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #F8FAFC; color: #0F172A; }
+    @keyframes globalFadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    body { animation: globalFadeIn 0.6s ease-out forwards; }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px 12px 48px;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .cta-primary {
+      background: linear-gradient(135deg, #1E40AF, #2563EB);
+      box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+      transition: all 0.3s ease;
+    }
+    .cta-primary:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-10">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-800 to-brand-600 flex items-center justify-center shadow-md mx-auto mb-4">
+        <span class="text-white font-bold text-lg">Z</span>
+      </div>
+      <h1 class="text-2xl font-bold text-brand-900">Admin Control Panel</h1>
+      <p class="text-sm text-slate-500 mt-2">Log in to manage the platform</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-surface-200 shadow-xl p-8">
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" novalidate>
+        <div class="mb-6">
+          <label class="block text-[12px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Admin Phone Number</label>
+          <div class="relative">
+            <div class="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              <i data-lucide="smartphone" class="w-4 h-4 text-slate-400"></i>
+              <span class="text-[13px] font-medium text-slate-500">+254</span>
+            </div>
+            <input type="tel" id="adminPhone" class="form-input" style="padding-left: 90px;" placeholder="700 000 000" maxlength="9" />
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <label class="block text-[12px] font-semibold text-slate-600 uppercase tracking-wider mb-2">Admin Password</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <button type="submit" id="adminLoginBtn" class="cta-primary w-full text-white text-[14px] font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+          <span>Access Admin Dashboard</span>
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+        </button>
+      </form>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a href="/login.html" class="text-sm text-slate-500 hover:text-brand-700 transition-colors flex items-center justify-center gap-1.5">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        Return to Member Login
+      </a>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const phone = document.getElementById('adminPhone').value.replace(/\s/g, '');
+      const password = document.getElementById('adminPassword').value;
+
+      const btn = document.getElementById('adminLoginBtn');
+      btn.disabled = true;
+      btn.innerHTML = 'Authenticating...';
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, password })
+        });
+        const result = await response.json();
+
+        if (result.success && result.user.phone === '700000000') {
+          window.location.href = 'dashboard.html';
+        } else {
+          alert(result.message || 'Access Denied: Admin credentials required.');
+          btn.disabled = false;
+          btn.innerHTML = 'Access Admin Dashboard <i data-lucide="shield-check" class="w-4 h-4"></i>';
+          lucide.createIcons();
+        }
+      } catch (err) {
+        alert('An error occurred.');
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

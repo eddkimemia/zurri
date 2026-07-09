@@ -185,7 +185,7 @@
           <i data-lucide="bell" class="w-4 h-4 text-slate-500"></i>
           <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] text-white font-bold flex items-center justify-center">7</span>
         </button>
-        <button onclick="window.location.href='auth.html'" class="w-9 h-9 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
+        <button onclick="handleLogout()" class="w-9 h-9 rounded-lg hover:bg-red-50 flex items-center justify-center transition-colors" title="Logout">
           <i data-lucide="log-out" class="w-4 h-4 text-slate-400"></i>
         </button>
       </div>
@@ -650,7 +650,7 @@ async function loadAdminData() {
     try {
         const statsRes = await fetch('/api/admin/stats');
         const statsData = await statsRes.json();
-        if (!statsData.success) { window.location.href = '../auth.html'; return; }
+        if (!statsData.success) { window.location.href = 'login.html'; return; }
         updateStats(statsData.stats);
 
         const usersRes = await fetch('/api/admin/users');
@@ -710,9 +710,21 @@ function switchPage(page) {
 // ===== TOAST =====
 function showToast(msg) {
   const t = document.getElementById('toast');
-  document.getElementById('toastText').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
+  const toastText = document.getElementById('toastText');
+  if (toastText) toastText.textContent = msg;
+  if (t) {
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+}
+
+async function handleLogout() {
+  try {
+    await fetch('/api/logout');
+    window.location.href = 'login.html';
+  } catch (err) {
+    window.location.href = 'login.html';
+  }
 }
 
 // ===== MODAL =====

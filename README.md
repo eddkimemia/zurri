@@ -61,4 +61,4 @@ We provide automated Node.js scripts to verify the core business logic.
 - `/src/services/`: Core business logic (Auth, Referrals, Transactions).
 - `/tests/`: Automated verification scripts.
 - `/server.js`: Express application and API route definitions.
-- `index.html`, `auth.html`, `dashboard.html`: Frontend application layers.
+- `index.html`, `login.html`, `register.html`, `dashboard.html`: Frontend application layers.
